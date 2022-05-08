@@ -13,6 +13,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.RandomAccessFile;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +54,16 @@ public class MainActivity extends AppCompatActivity {
                 () -> {
                     ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
                     activityManager.getRunningAppProcesses();
+                })
+        );
+        testCases.add(new Pair<>(
+                "java.net.NetworkInterface getHardwareAddress()",
+                () -> {
+                    try {
+                        NetworkInterface.getNetworkInterfaces().nextElement().getHardwareAddress();
+                    } catch (SocketException e) {
+                        e.printStackTrace();
+                    }
                 })
         );
         testCases.add(new Pair<>(
