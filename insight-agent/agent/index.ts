@@ -143,4 +143,16 @@ Java.perform(() => {
             return this.delete()
         }
     //#endregion
+
+    //#region java.io.FileInputStream
+    const FileInputStream = Java.use('java.io.FileInputStream')
+    FileInputStream
+        .$init
+        .overload('java.io.File')
+        .implementation = function (file) {
+            send(`[java.io.FileInputStream $init] file: ${file}`)
+            printStackTrace()
+            this.$init(file)
+        }
+    //#endregion
 })

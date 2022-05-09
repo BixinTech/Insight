@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.RandomAccessFile;
@@ -102,6 +103,16 @@ public class MainActivity extends AppCompatActivity {
                 "java.io.File delete()",
                 () -> {
                     new File("").delete();
+                })
+        );
+        testCases.add(new Pair<>(
+                "java.io.FileInputStream $init(java.io.File)",
+                () -> {
+                    try {
+                        new FileInputStream(new File("/data/user/0/org.insight/lib-main/dso_state"));
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
                 })
         );
         recyclerView.setAdapter(new TestCaseAdapter(testCases));
