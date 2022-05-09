@@ -120,4 +120,16 @@ Java.perform(() => {
             return this.get(property)
         }
     //#endregion
+
+    //#region android.app.ContextImpl
+    const ContextImpl = Java.use('android.app.ContextImpl')
+    ContextImpl
+        .sendBroadcast
+        .overload('android.content.Intent')
+        .implementation = function (intent: any) {
+            send(`[android.app.ContextImpl sendBroadcast] intent: ${intent}`)
+            printStackTrace()
+            this.sendBroadcast(intent)
+        }
+    //#endregion
 })

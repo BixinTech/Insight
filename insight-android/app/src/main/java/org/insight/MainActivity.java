@@ -2,6 +2,7 @@ package org.insight;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
@@ -89,6 +90,12 @@ public class MainActivity extends AppCompatActivity {
                 () -> {
                     TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                     telephonyManager.getSimOperator();
+                })
+        );
+        testCases.add(new Pair<>(
+                "android.app.ContextImpl sendBroadcast()",
+                () -> {
+                    sendBroadcast(new Intent());
                 })
         );
         recyclerView.setAdapter(new TestCaseAdapter(testCases));
