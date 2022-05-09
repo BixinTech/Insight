@@ -28,26 +28,37 @@ function printStackTrace() {
 }
 
 Java.perform(() => {
+    const ActivityThread = Java.use('android.app.ActivityThread')
+    const processName = ActivityThread.currentProcessName()
+    log(processName)
+    const dangerDirectories = [
+        '/data/user/0/' + processName + '/lib-main/'
+    ]
+
     //#region java.io.RandomAccessFile
     const RandomAccessFile = Java.use('java.io.RandomAccessFile')
     RandomAccessFile
         .$init
         .overload('java.io.File', 'java.lang.String')
         .implementation = function (file: string, mode) {
-            if (!file.toString().startsWith('/storage/emulated/0/Android/data')) {
-                send(`[java.io.RandomAccessFile $init] file: ${file}, mode: ${mode}`)
-                printStackTrace()
-            }
+            dangerDirectories.forEach(dangerDirectory => {
+                if (file.toString().startsWith(dangerDirectory)) {
+                    send(`[java.io.RandomAccessFile $init] file: ${file}, mode: ${mode}`)
+                    printStackTrace()
+                }
+            });
             this.$init(file, mode)
         }
     RandomAccessFile
         .$init
         .overload('java.lang.String', 'java.lang.String')
         .implementation = function (name: string, mode) {
-            if (!name.startsWith('/storage/emulated/0/Android/data')) {
-                send(`[java.io.RandomAccessFile $init] name: ${name}, mode: ${mode}`)
-                printStackTrace()
-            }
+            dangerDirectories.forEach(dangerDirectory => {
+                if (name.startsWith(dangerDirectory)) {
+                    send(`[java.io.RandomAccessFile $init] name: ${name}, mode: ${mode}`)
+                    printStackTrace()
+                }
+            });
             this.$init(name, mode)
         }
     //#endregion

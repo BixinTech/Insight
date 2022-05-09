@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
                 "java.io.RandomAccessFile $init(java.io.File, java.lang.String)",
                 () -> {
                     try {
-                        new RandomAccessFile(new File("/proc/meminfo"), "r");
+                        new RandomAccessFile(new File("/data/user/0/org.insight/lib-main/dso_state"), "r");
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
                 "java.io.RandomAccessFile $init(java.lang.String, java.lang.String)",
                 () -> {
                     try {
-                        new RandomAccessFile("/proc/meminfo", "r");
+                        new RandomAccessFile("/data/user/0/org.insight/lib-main/dso_state", "r");
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 "java.io.FileOutputStream $init(java.io.File)",
                 () -> {
                     try {
-                        new FileOutputStream(new File("/proc/meminfo"));
+                        new FileOutputStream(new File("/data/user/0/org.insight/lib-main/dso_state"));
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
