@@ -4,6 +4,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.telephony.TelephonyManager;
 import android.util.Pair;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -81,6 +82,13 @@ public class MainActivity extends AppCompatActivity {
                 "android.provider.Settings$Secure getStringForUser()",
                 () -> {
                     Settings.System.getString(getContentResolver(), Settings.System.ANDROID_ID);
+                })
+        );
+        testCases.add(new Pair<>(
+                "android.os.SystemProperties get()",
+                () -> {
+                    TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                    telephonyManager.getSimOperator();
                 })
         );
         recyclerView.setAdapter(new TestCaseAdapter(testCases));

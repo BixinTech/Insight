@@ -108,4 +108,16 @@ Java.perform(() => {
             return this.getStringForUser(contentResolver, name, userHandle)
         }
     //#endregion
+
+    //#region android.os.SystemProperties
+    const SystemProperties = Java.use('android.os.SystemProperties')
+    SystemProperties
+        .get
+        .overload('java.lang.String')
+        .implementation = function (property: string) {
+            send(`[android.os.SystemProperties get] property: ${property}`)
+            printStackTrace()
+            return this.get(property)
+        }
+    //#endregion
 })
