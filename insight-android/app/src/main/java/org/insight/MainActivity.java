@@ -98,6 +98,12 @@ public class MainActivity extends AppCompatActivity {
                     sendBroadcast(new Intent());
                 })
         );
+        testCases.add(new Pair<>(
+                "java.io.File delete()",
+                () -> {
+                    new File("").delete();
+                })
+        );
         recyclerView.setAdapter(new TestCaseAdapter(testCases));
     }
 }

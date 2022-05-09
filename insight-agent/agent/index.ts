@@ -132,4 +132,15 @@ Java.perform(() => {
             this.sendBroadcast(intent)
         }
     //#endregion
+
+    //#region java.io.File
+    const File = Java.use('java.io.File')
+    File
+        .delete
+        .implementation = function () {
+            send(`[java.io.File delete]`)
+            printStackTrace()
+            return this.delete()
+        }
+    //#endregion
 })
