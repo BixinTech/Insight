@@ -96,4 +96,16 @@ Java.perform(() => {
             this.$init(file)
         }
     //#endregion
+
+    //#region android.provider.Settings$Secure
+    const Secure = Java.use('android.provider.Settings$Secure')
+    Secure
+        .getStringForUser
+        .overload('android.content.ContentResolver', 'java.lang.String', 'int')
+        .implementation = function (contentResolver: any, name: string, userHandle: number) {
+            send(`[android.provider.Settings$Secure getStringForUser] contentResolver: ${contentResolver}, name: ${name}, userHandle: ${userHandle}`)
+            printStackTrace()
+            return this.getStringForUser(contentResolver, name, userHandle)
+        }
+    //#endregion
 })

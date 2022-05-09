@@ -3,6 +3,7 @@ package org.insight;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Pair;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -74,6 +75,12 @@ public class MainActivity extends AppCompatActivity {
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
+                })
+        );
+        testCases.add(new Pair<>(
+                "android.provider.Settings$Secure getStringForUser()",
+                () -> {
+                    Settings.System.getString(getContentResolver(), Settings.System.ANDROID_ID);
                 })
         );
         recyclerView.setAdapter(new TestCaseAdapter(testCases));
