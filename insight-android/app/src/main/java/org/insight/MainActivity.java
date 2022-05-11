@@ -1,6 +1,7 @@
 package org.insight;
 
 import android.app.ActivityManager;
+import android.app.AlarmManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -113,6 +114,13 @@ public class MainActivity extends AppCompatActivity {
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
+                })
+        );
+        testCases.add(new Pair<>(
+                "android.app.AlarmManager setImpl()",
+                () -> {
+                    AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 10000, null);
                 })
         );
         recyclerView.setAdapter(new TestCaseAdapter(testCases));
