@@ -83,6 +83,7 @@ Java.perform(() => {
 
   //#region java.io.FileOutputStream
   const FileOutputStream = Java.use("java.io.FileOutputStream");
+
   FileOutputStream.$init.overload("java.io.File").implementation = function (
     file
   ) {
@@ -90,6 +91,46 @@ Java.perform(() => {
     printStackTrace();
     this.$init(file);
   };
+
+  FileOutputStream.$init.overload("java.io.FileDescriptor").implementation =
+    function (fdObj) {
+      send(`[java.io.FileOutputStream $init] fdObj: ${fdObj}`);
+      printStackTrace();
+      this.$init(fdObj);
+    };
+
+  FileOutputStream.$init.overload("java.lang.String").implementation =
+    function (name) {
+      send(`[java.io.FileOutputStream $init] name: ${name}`);
+      printStackTrace();
+      this.$init(name);
+    };
+
+  FileOutputStream.$init.overload("java.io.File", "boolean").implementation =
+    function (file, append) {
+      send(`[java.io.FileOutputStream $init] file: ${file}, append: ${append}`);
+      printStackTrace();
+      this.$init(file, append);
+    };
+
+  FileOutputStream.$init.overload(
+    "java.io.FileDescriptor",
+    "boolean"
+  ).implementation = function (fdObj, append) {
+    send(`[java.io.FileOutputStream $init] fdObj: ${fdObj}, append: ${append}`);
+    printStackTrace();
+    this.$init(fdObj, append);
+  };
+
+  FileOutputStream.$init.overload(
+    "java.lang.String",
+    "boolean"
+  ).implementation = function (name, append) {
+    send(`[java.io.FileOutputStream $init] name: ${name}, append: ${append}`);
+    printStackTrace();
+    this.$init(name, append);
+  };
+
   //#endregion
 
   //#region android.provider.Settings$Secure
