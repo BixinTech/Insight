@@ -128,14 +128,23 @@ Java.perform(() => {
   FileOutputStream.$init.overload("java.lang.String").implementation =
     function (name) {
       send(`[java.io.FileOutputStream $init] name: ${name}`);
-      getStackTrace();
+      targets.forEach((target) => {
+        if (name.includes(target)) {
+          printStackTrace(getStackTrace());
+        }
+      });
       this.$init(name);
     };
 
   FileOutputStream.$init.overload("java.io.File", "boolean").implementation =
     function (file, append) {
       send(`[java.io.FileOutputStream $init] file: ${file}, append: ${append}`);
-      getStackTrace();
+      targets.forEach((target) => {
+        const absolutePath = file.getAbsolutePath().toString() as string;
+        if (absolutePath.includes(target)) {
+          printStackTrace(getStackTrace());
+        }
+      });
       this.$init(file, append);
     };
 
@@ -144,7 +153,16 @@ Java.perform(() => {
     "boolean"
   ).implementation = function (fdObj, append) {
     send(`[java.io.FileOutputStream $init] fdObj: ${fdObj}, append: ${append}`);
-    printStackTrace(getStackTrace());
+    const fdId = fdObj.getInt$();
+    const Paths = Java.use("java.nio.file.Paths");
+    const path = Paths.get(`/proc/self/fd/${fdId}`, []);
+    const Files = Java.use("java.nio.file.Files");
+    const absolutePath = Files.readSymbolicLink(path).toString();
+    targets.forEach((target) => {
+      if (absolutePath.includes(target)) {
+        printStackTrace(getStackTrace());
+      }
+    });
     this.$init(fdObj, append);
   };
 
@@ -153,7 +171,11 @@ Java.perform(() => {
     "boolean"
   ).implementation = function (name, append) {
     send(`[java.io.FileOutputStream $init] name: ${name}, append: ${append}`);
-    getStackTrace();
+    targets.forEach((target) => {
+      if (name.includes(target)) {
+        printStackTrace(getStackTrace());
+      }
+    });
     this.$init(name, append);
   };
 
