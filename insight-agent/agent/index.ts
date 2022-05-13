@@ -191,7 +191,9 @@ Java.perform(() => {
     send(
       `[android.provider.Settings$Secure getStringForUser] contentResolver: ${contentResolver}, name: ${name}, userHandle: ${userHandle}`
     );
-    getStackTrace();
+    if (name == "android_id") {
+      printStackTrace(getStackTrace());
+    }
     return this.getStringForUser(contentResolver, name, userHandle);
   };
   //#endregion
