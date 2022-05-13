@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -77,6 +78,17 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         new FileOutputStream(new File("/data/user/0/org.insight/lib-main/dso_state"));
                     } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                })
+        );
+        testCases.add(new Pair<>(
+                "java.io.FileOutputStream $init(java.io.FileDescriptor)",
+                () -> {
+                    try {
+                        FileDescriptor fd = new FileOutputStream(new File("/data/user/0/org.insight/lib-main/dso_state")).getFD();
+                        FileOutputStream fileOutputStream = new FileOutputStream(fd);
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 })
