@@ -2,7 +2,10 @@
 
 ```sh
 $ npm install
+either
 $ frida -U gadget --no-pause -l _agent.js
+or
+$ frida -H {ip} gadget --no-pause -l _agent.js
 ```
 
 ### Development workflow
