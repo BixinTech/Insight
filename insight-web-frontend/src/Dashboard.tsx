@@ -19,12 +19,9 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import QrCode2Icon from "@mui/icons-material/QrCode2";
 
-import { mainListItems, secondaryListItems } from "./listItems";
-import Chart from "./Chart";
-import Deposits from "./Deposits";
-import Orders from "./Orders";
-import { Dialog } from "@mui/material";
+import { mainListItems } from "./listItems";
 import { SimpleDialog } from "./SimpleDialog";
+import Connections from "./Connections";
 
 function Copyright(props: any) {
   return (
@@ -36,7 +33,7 @@ function Copyright(props: any) {
     >
       {"Copyright © "}
       <Link color="inherit" href="https://mui.com/">
-        Your Website
+        BixinTech Insight
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -166,8 +163,8 @@ function DashboardContent() {
                 justifyContent: "space-between",
               }}
             >
-              <IconButton>
-                <QrCode2Icon onClick={handleClickOpen} />
+              <IconButton onClick={handleClickOpen}>
+                <QrCode2Icon />
               </IconButton>
               <SimpleDialog open={qrCodeDialogOpen} onClose={handleClose} />
               <Typography
@@ -184,11 +181,7 @@ function DashboardContent() {
             </IconButton>
           </Toolbar>
           <Divider />
-          <List component="nav">
-            {mainListItems}
-            <Divider sx={{ my: 1 }} />
-            {secondaryListItems}
-          </List>
+          <List component="nav">{mainListItems}</List>
         </Drawer>
         <Box
           component="main"
@@ -205,36 +198,10 @@ function DashboardContent() {
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
-              {/* Chart */}
-              <Grid item xs={12} md={8} lg={9}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: "flex",
-                    flexDirection: "column",
-                    height: 240,
-                  }}
-                >
-                  <Chart />
-                </Paper>
-              </Grid>
-              {/* Recent Deposits */}
-              <Grid item xs={12} md={4} lg={3}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: "flex",
-                    flexDirection: "column",
-                    height: 240,
-                  }}
-                >
-                  <Deposits />
-                </Paper>
-              </Grid>
-              {/* Recent Orders */}
+              {/* Connections */}
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-                  <Orders />
+                  <Connections />
                 </Paper>
               </Grid>
             </Grid>
