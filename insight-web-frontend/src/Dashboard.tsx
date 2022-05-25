@@ -17,10 +17,14 @@ import Link from "@mui/material/Link";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import QrCode2Icon from "@mui/icons-material/QrCode2";
+
 import { mainListItems, secondaryListItems } from "./listItems";
 import Chart from "./Chart";
 import Deposits from "./Deposits";
 import Orders from "./Orders";
+import { Dialog } from "@mui/material";
+import { SimpleDialog } from "./SimpleDialog";
 
 function Copyright(props: any) {
   return (
@@ -98,6 +102,16 @@ function DashboardContent() {
     setOpen(!open);
   };
 
+  const [qrCodeDialogOpen, setQrDialogOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setQrDialogOpen(true);
+  };
+
+  const handleClose = () => {
+    setQrDialogOpen(false);
+  };
+
   return (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: "flex" }}>
@@ -141,10 +155,30 @@ function DashboardContent() {
             sx={{
               display: "flex",
               alignItems: "center",
-              justifyContent: "flex-end",
+              justifyContent: "space-between",
               px: [1],
             }}
           >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <IconButton>
+                <QrCode2Icon onClick={handleClickOpen} />
+              </IconButton>
+              <SimpleDialog open={qrCodeDialogOpen} onClose={handleClose} />
+              <Typography
+                variant="body1"
+                color="inherit"
+                noWrap
+                sx={{ flexGrow: 1, marginLeft: "5px" }}
+              >
+                Scan
+              </Typography>
+            </div>
             <IconButton onClick={toggleDrawer}>
               <ChevronLeftIcon />
             </IconButton>
