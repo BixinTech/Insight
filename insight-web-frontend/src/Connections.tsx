@@ -7,6 +7,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 
 import Title from "./Title";
+import Api from "./Api";
 
 // Generate Order Data
 function createData(
@@ -64,6 +65,17 @@ const rows = [
 ];
 
 export default function Connections() {
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      Api.get("/connections/retrieveAll")
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((error) => {});
+    }, 10000);
+    return () => clearInterval(interval);
+  });
+
   return (
     <React.Fragment>
       <Title>Active Connections</Title>

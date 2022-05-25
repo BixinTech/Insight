@@ -7,8 +7,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 
 import { QRCodeSVG } from "qrcode.react";
-
-const API_BASE = "http://localhost:8080/register";
+import { API_BASE_URL } from "./Api";
 
 function Copyright(props: any) {
   return (
@@ -40,7 +39,11 @@ export default function SignIn() {
         }}
       >
         <Box>
-          <QRCodeSVG value={API_BASE} style={{ width: 300, height: 300 }} />,
+          <QRCodeSVG
+            value={API_BASE_URL + "/register"}
+            style={{ width: 300, height: 300 }}
+          />
+          ,
         </Box>
       </Box>
       <Copyright sx={{ mt: 8, mb: 4 }} />
