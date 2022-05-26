@@ -2,12 +2,14 @@ package org.insight;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.format.Formatter;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,9 +29,15 @@ import com.google.mlkit.vision.barcode.BarcodeScanning;
 import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.common.InputImage;
 
+import java.io.IOException;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class InsightScanRegisterActivity extends AppCompatActivity {
 
@@ -38,7 +46,6 @@ public class InsightScanRegisterActivity extends AppCompatActivity {
     private static final double RATIO_16_9_VALUE = 16.0 / 9.0;
 
     private PreviewView pvScan;
-    private TextView scanResultTextView;
     private ProcessCameraProvider cameraProvider;
     private CameraSelector cameraSelector;
     private Preview previewUseCase;
@@ -50,7 +57,6 @@ public class InsightScanRegisterActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_scan_register);
 
-        scanResultTextView = findViewById(R.id.scanResultTextView);
         pvScan = findViewById(R.id.scanPreview);
 
         setupCamera();
@@ -138,6 +144,8 @@ public class InsightScanRegisterActivity extends AppCompatActivity {
         }
     }
 
+    private boolean requesting = false;
+
     @SuppressLint("UnsafeOptInUsageError")
     private void processImageProxy(
             BarcodeScanner barcodeScanner,
@@ -151,7 +159,39 @@ public class InsightScanRegisterActivity extends AppCompatActivity {
                 .addOnSuccessListener(barcodes -> {
                     if (barcodes.size() > 0) {
                         Barcode barcode = barcodes.get(0);
-                        scanResultTextView.setText(barcode.getRawValue());
+
+                        if (requesting) {
+                        } else {
+                            requesting = true;
+
+                            String registerUrl = barcode.getRawValue();
+                            Context context = InsightScanRegisterActivity.this.getApplicationContext();
+                            WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+                            String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
+                            try {
+                                InsightApi.getInstance().register(registerUrl + "?ip=" + ip).enqueue(new Callback() {
+                                    @Override
+                                    public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                                        requesting = false;
+                                    }
+
+                                    @Override
+                                    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                                        if (response.isSuccessful()) {
+                                            String responseStr = Objects.requireNonNull(response.body()).string();
+                                            // Do what you want to do with the response.
+                                            System.out.println();
+                                            finish();
+                                        } else {
+                                            // Request not successful
+                                        }
+                                        requesting = false;
+                                    }
+                                });
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 })
                 .addOnCompleteListener(task -> imageProxy.close());

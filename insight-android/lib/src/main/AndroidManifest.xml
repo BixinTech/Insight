@@ -3,12 +3,12 @@
     package="org.insight">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <uses-feature android:name="android.hardware.camera" />
 
-    <application>
+    <application android:usesCleartextTraffic="true">
         <provider
             android:name=".InsightContentProvider"
             android:authorities="${applicationId}.org.insight"

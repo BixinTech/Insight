@@ -13,11 +13,6 @@ interface Response {
   data: any;
 }
 
-function getNanoSecondTime() {
-  const hrTime = process.hrtime();
-  return hrTime[0] * 1000000000 + hrTime[1];
-}
-
 const registry = new Map<string, ChildProcessWithoutNullStreams>();
 
 const app = express();
@@ -41,53 +36,66 @@ app.get("/register", (request, response) => {
       return false;
     }
   }
+
   if (request.query.ip) {
-    const registerTime = getNanoSecondTime();
+    if (registry.has(request.query.ip as string)) {
+      response.send({
+        code: ResponseCode.FAILURE,
+        message: "the agent has connected and been working",
+      } as Response);
+    } else {
+      const childProcess = spawn(
+        "frida",
+        [
+          "-H",
+          `${request.query.ip}`,
+          "gadget",
+          "--no-pause",
+          "-l",
+          "_agent.js",
+        ],
+        { cwd: "../insight-agent" }
+      );
 
-    const childProcess = spawn(
-      "frida",
-      ["-H", `${request.query.ip}`, "gadget", "--no-pause", "-l", "_agent.js"],
-      { cwd: "../insight-agent" }
-    );
+      let output: string = "";
+      childProcess.stderr.on("data", function (data) {
+        console.error(data.toString());
+        output += data.toString();
+      });
 
-    let output: string = "";
-    childProcess.stderr.on("data", function (data) {
-      console.error(data.toString());
-      output += data.toString();
-    });
+      childProcess.stdout.on("data", function (data) {
+        console.log(data.toString());
+        output += data.toString();
+      });
 
-    childProcess.stdout.on("data", function (data) {
-      console.log(data.toString());
-      output += data.toString();
-    });
+      childProcess.on("close", (code) => {
+        console.log(`child process exited with code ${code}`);
 
-    childProcess.on("close", (code) => {
-      console.log(`child process exited with code ${code}`);
+        registry.delete(request.query.ip as string);
+      });
 
-      registry.delete(request.query.ip as string);
-    });
-
-    setTimeout(() => {
-      if (response.writableEnded) {
-      } else {
-        if (isConnected(output)) {
-          response.send({
-            code: ResponseCode.SUCCESS,
-            message: "insight agent connection established",
-            data: {
-              ip: request.query.ip,
-              date: registerTime,
-            },
-          } as Response);
-          registry.set(request.query.ip as string, childProcess);
+      setTimeout(() => {
+        if (response.writableEnded) {
         } else {
-          response.send({
-            code: ResponseCode.FAILURE,
-            message: "insight agent connection failed",
-          } as Response);
+          if (isConnected(output)) {
+            response.send({
+              code: ResponseCode.SUCCESS,
+              message: "insight agent connection established",
+              data: {
+                ip: request.query.ip,
+                date: Date.now(),
+              },
+            } as Response);
+            registry.set(request.query.ip as string, childProcess);
+          } else {
+            response.send({
+              code: ResponseCode.FAILURE,
+              message: "insight agent connection failed",
+            } as Response);
+          }
         }
-      }
-    }, 5000);
+      }, 5000);
+    }
   } else {
     response.send({
       code: ResponseCode.FAILURE,
@@ -105,6 +113,6 @@ app.get("/connections/retrieveAll", (request, response) => {
   } as Response);
 });
 
-app.listen(8080, () => {
-  console.log("insight web backend listening on port 8080!");
+app.listen(9080, () => {
+  console.log("insight web backend listening on port 9080!");
 });
