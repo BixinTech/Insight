@@ -23,6 +23,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    namespace 'org.insight'
 }
 
 dependencies {
@@ -36,6 +37,9 @@ dependencies {
     implementation "com.google.mlkit:barcode-scanning:17.0.2"
 
     implementation "com.squareup.okhttp3:okhttp:4.9.3"
+
+    // https://mvnrepository.com/artifact/com.alibaba/fastjson
+    implementation "com.alibaba:fastjson:2.0.5.android"
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

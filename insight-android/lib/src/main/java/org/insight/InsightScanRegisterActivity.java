@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.text.format.Formatter;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,6 +25,9 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.mlkit.vision.barcode.BarcodeScanner;
 import com.google.mlkit.vision.barcode.BarcodeScanning;
@@ -45,11 +50,13 @@ public class InsightScanRegisterActivity extends AppCompatActivity {
     private static final double RATIO_4_3_VALUE = 4.0 / 3.0;
     private static final double RATIO_16_9_VALUE = 16.0 / 9.0;
 
-    private PreviewView pvScan;
+    private PreviewView previewView;
+    private CircularProgressIndicator circularProgressIndicator;
+
     private ProcessCameraProvider cameraProvider;
     private CameraSelector cameraSelector;
-    private Preview previewUseCase;
-    private ImageAnalysis analysisUseCase;
+    private Preview preview;
+    private ImageAnalysis imageAnalysis;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,7 +64,8 @@ public class InsightScanRegisterActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_scan_register);
 
-        pvScan = findViewById(R.id.scanPreview);
+        previewView = findViewById(R.id.preview_view);
+        circularProgressIndicator = findViewById(R.id.circular_progress_indicator);
 
         setupCamera();
     }
@@ -95,19 +103,19 @@ public class InsightScanRegisterActivity extends AppCompatActivity {
         if (cameraProvider == null) {
             return;
         }
-        if (previewUseCase != null) {
-            cameraProvider.unbind(previewUseCase);
+        if (preview != null) {
+            cameraProvider.unbind(preview);
         }
 
-        previewUseCase = new Preview.Builder()
+        preview = new Preview.Builder()
                 .setTargetAspectRatio(getScreenAspectRatio())
-                .setTargetRotation(pvScan.getDisplay().getRotation())
+                .setTargetRotation(previewView.getDisplay().getRotation())
                 .build();
 
-        previewUseCase.setSurfaceProvider(pvScan.getSurfaceProvider());
+        preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
         try {
-            cameraProvider.bindToLifecycle(this, cameraSelector, previewUseCase);
+            cameraProvider.bindToLifecycle(this, cameraSelector, preview);
         } catch (IllegalStateException | IllegalArgumentException e) {
             // Handle any errors (including cancellation) here.
             Log.e("BindToLifecycle", "Unhandled exception", e);
@@ -120,23 +128,23 @@ public class InsightScanRegisterActivity extends AppCompatActivity {
         if (cameraProvider == null) {
             return;
         }
-        if (analysisUseCase != null) {
-            cameraProvider.unbind(analysisUseCase);
+        if (imageAnalysis != null) {
+            cameraProvider.unbind(imageAnalysis);
         }
 
-        analysisUseCase = new ImageAnalysis.Builder()
+        imageAnalysis = new ImageAnalysis.Builder()
                 .setTargetAspectRatio(getScreenAspectRatio())
-                .setTargetRotation(pvScan.getDisplay().getRotation())
+                .setTargetRotation(previewView.getDisplay().getRotation())
                 .build();
 
         // Initialize our background executor
         ExecutorService cameraExecutor = Executors.newSingleThreadExecutor();
 
-        analysisUseCase.setAnalyzer(cameraExecutor, imageProxy -> processImageProxy(barcodeScanner, imageProxy));
+        imageAnalysis.setAnalyzer(cameraExecutor, imageProxy -> processImageProxy(barcodeScanner, imageProxy));
 
         try {
             cameraProvider.bindToLifecycle(/* lifecycleOwner= */this,
-                    cameraSelector, analysisUseCase
+                    cameraSelector, imageAnalysis
             );
         } catch (IllegalStateException | IllegalArgumentException e) {
             // Handle any errors (including cancellation) here.
@@ -163,6 +171,7 @@ public class InsightScanRegisterActivity extends AppCompatActivity {
                         if (requesting) {
                         } else {
                             requesting = true;
+                            runOnUiThread(() -> circularProgressIndicator.setVisibility(View.VISIBLE));
 
                             String registerUrl = barcode.getRawValue();
                             Context context = InsightScanRegisterActivity.this.getApplicationContext();
@@ -173,19 +182,32 @@ public class InsightScanRegisterActivity extends AppCompatActivity {
                                     @Override
                                     public void onFailure(@NonNull Call call, @NonNull IOException e) {
                                         requesting = false;
+                                        runOnUiThread(() -> circularProgressIndicator.setVisibility(View.GONE));
                                     }
 
                                     @Override
                                     public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                                        requesting = false;
+                                        runOnUiThread(() -> circularProgressIndicator.setVisibility(View.GONE));
+
                                         if (response.isSuccessful()) {
-                                            String responseStr = Objects.requireNonNull(response.body()).string();
+                                            String responseString = Objects.requireNonNull(response.body()).string();
                                             // Do what you want to do with the response.
                                             System.out.println();
-                                            finish();
+
+                                            JSONObject jsonObject = (JSONObject) JSON.parse(responseString);
+                                            int code = jsonObject.getInteger("code");
+                                            JSONObject data = jsonObject.getJSONObject("data");
+                                            String message = jsonObject.getString("message");
+
+                                            if (code == 8000) {
+                                                finish();
+                                            }
+
+                                            runOnUiThread(() -> Toast.makeText(InsightScanRegisterActivity.this, message, Toast.LENGTH_LONG).show());
                                         } else {
                                             // Request not successful
                                         }
-                                        requesting = false;
                                     }
                                 });
                             } catch (IOException e) {
@@ -204,7 +226,7 @@ public class InsightScanRegisterActivity extends AppCompatActivity {
 
     private int getScreenAspectRatio() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
-        pvScan.getDisplay().getRealMetrics(displayMetrics);
+        previewView.getDisplay().getRealMetrics(displayMetrics);
         return aspectRatio(displayMetrics.widthPixels, displayMetrics.heightPixels);
     }
 
