@@ -43,31 +43,21 @@ Java.perform(() => {
   log(processName);
 
   //#region java.io.RandomAccessFile
-  const dangerDirectories = ["/data/user/0/" + processName + "/lib-main/"];
-
   const RandomAccessFile = Java.use("java.io.RandomAccessFile");
   RandomAccessFile.$init.overload(
     "java.io.File",
     "java.lang.String"
   ).implementation = function (file: string, mode) {
-    dangerDirectories.forEach((dangerDirectory) => {
-      if (file.toString().startsWith(dangerDirectory)) {
-        send(`[java.io.RandomAccessFile $init] file: ${file}, mode: ${mode}`);
-        printStackTrace(getStackTrace());
-      }
-    });
+    send(`[java.io.RandomAccessFile $init] file: ${file}, mode: ${mode}`);
+    printStackTrace(getStackTrace());
     this.$init(file, mode);
   };
   RandomAccessFile.$init.overload(
     "java.lang.String",
     "java.lang.String"
   ).implementation = function (name: string, mode) {
-    dangerDirectories.forEach((dangerDirectory) => {
-      if (name.startsWith(dangerDirectory)) {
-        send(`[java.io.RandomAccessFile $init] name: ${name}, mode: ${mode}`);
-        printStackTrace(getStackTrace());
-      }
-    });
+    send(`[java.io.RandomAccessFile $init] name: ${name}, mode: ${mode}`);
+    printStackTrace(getStackTrace());
     this.$init(name, mode);
   };
   //#endregion
@@ -93,18 +83,12 @@ Java.perform(() => {
   //#region java.io.FileOutputStream
   const FileOutputStream = Java.use("java.io.FileOutputStream");
 
-  const targets = ["nim_sdk.log"];
-
   FileOutputStream.$init.overload("java.io.File").implementation = function (
     file
   ) {
     send(`[java.io.FileOutputStream $init] file: ${file}`);
-    targets.forEach((target) => {
-      const absolutePath = file.getAbsolutePath().toString() as string;
-      if (absolutePath.includes(target)) {
-        printStackTrace(getStackTrace());
-      }
-    });
+    const absolutePath = file.getAbsolutePath().toString() as string;
+    printStackTrace(getStackTrace());
 
     this.$init(file);
   };
@@ -117,34 +101,21 @@ Java.perform(() => {
       const path = Paths.get(`/proc/self/fd/${fdId}`, []);
       const Files = Java.use("java.nio.file.Files");
       const absolutePath = Files.readSymbolicLink(path).toString();
-      targets.forEach((target) => {
-        if (absolutePath.includes(target)) {
-          printStackTrace(getStackTrace());
-        }
-      });
+      printStackTrace(getStackTrace());
       this.$init(fdObj);
     };
 
   FileOutputStream.$init.overload("java.lang.String").implementation =
     function (name) {
       send(`[java.io.FileOutputStream $init] name: ${name}`);
-      targets.forEach((target) => {
-        if (name.includes(target)) {
-          printStackTrace(getStackTrace());
-        }
-      });
+      printStackTrace(getStackTrace());
       this.$init(name);
     };
 
   FileOutputStream.$init.overload("java.io.File", "boolean").implementation =
     function (file, append) {
       send(`[java.io.FileOutputStream $init] file: ${file}, append: ${append}`);
-      targets.forEach((target) => {
-        const absolutePath = file.getAbsolutePath().toString() as string;
-        if (absolutePath.includes(target)) {
-          printStackTrace(getStackTrace());
-        }
-      });
+      printStackTrace(getStackTrace());
       this.$init(file, append);
     };
 
@@ -158,11 +129,7 @@ Java.perform(() => {
     const path = Paths.get(`/proc/self/fd/${fdId}`, []);
     const Files = Java.use("java.nio.file.Files");
     const absolutePath = Files.readSymbolicLink(path).toString();
-    targets.forEach((target) => {
-      if (absolutePath.includes(target)) {
-        printStackTrace(getStackTrace());
-      }
-    });
+    printStackTrace(getStackTrace());
     this.$init(fdObj, append);
   };
 
@@ -171,11 +138,7 @@ Java.perform(() => {
     "boolean"
   ).implementation = function (name, append) {
     send(`[java.io.FileOutputStream $init] name: ${name}, append: ${append}`);
-    targets.forEach((target) => {
-      if (name.includes(target)) {
-        printStackTrace(getStackTrace());
-      }
-    });
+    printStackTrace(getStackTrace());
     this.$init(name, append);
   };
 
@@ -191,9 +154,7 @@ Java.perform(() => {
     send(
       `[android.provider.Settings$Secure getStringForUser] contentResolver: ${contentResolver}, name: ${name}, userHandle: ${userHandle}`
     );
-    if (name == "android_id") {
-      printStackTrace(getStackTrace());
-    }
+    printStackTrace(getStackTrace());
     return this.getStringForUser(contentResolver, name, userHandle);
   };
   //#endregion
@@ -204,7 +165,7 @@ Java.perform(() => {
     key: string
   ) {
     send(`[android.os.SystemProperties get] key: ${key}`);
-    getStackTrace();
+    printStackTrace(getStackTrace());
     return this.get(key);
   };
   SystemProperties.get.overload(
@@ -212,7 +173,7 @@ Java.perform(() => {
     "java.lang.String"
   ).implementation = function (key: string, def: string) {
     send(`[android.os.SystemProperties get] key: ${key}, def: ${def}`);
-    getStackTrace();
+    printStackTrace(getStackTrace());
     return this.get(key, def);
   };
   //#endregion
@@ -222,7 +183,7 @@ Java.perform(() => {
   ContextImpl.sendBroadcast.overload("android.content.Intent").implementation =
     function (intent: any) {
       send(`[android.app.ContextImpl sendBroadcast] intent: ${intent}`);
-      getStackTrace();
+      printStackTrace(getStackTrace());
       this.sendBroadcast(intent);
     };
   //#endregion
@@ -231,7 +192,7 @@ Java.perform(() => {
   const File = Java.use("java.io.File");
   File.delete.implementation = function () {
     send(`[java.io.File delete]`);
-    getStackTrace();
+    printStackTrace(getStackTrace());
     return this.delete();
   };
   //#endregion
@@ -242,7 +203,7 @@ Java.perform(() => {
     file
   ) {
     send(`[java.io.FileInputStream $init] file: ${file}`);
-    getStackTrace();
+    printStackTrace(getStackTrace());
     this.$init(file);
   };
   //#endregion
@@ -265,7 +226,7 @@ Java.perform(() => {
     send(
       `[android.app.AlarmManager $setImpl] type: ${type}, triggerAtMillis: ${triggerAtMillis}`
     );
-    getStackTrace();
+    printStackTrace(getStackTrace());
     this.setImpl(
       type,
       triggerAtMillis,
@@ -279,6 +240,34 @@ Java.perform(() => {
       workSource,
       alarmClock
     );
+  };
+  //#endregion
+
+  //#region android.content.Context
+  const Context = Java.use("android.content.Context");
+  Context.getSystemService.overload("java.lang.String").implementation =
+    function (name: any) {
+      send(`[android.content.Context getSystemService] name: ${name}`);
+      printStackTrace(getStackTrace());
+      return this.getSystemService(name);
+    };
+
+  Context.getSystemService.overload("java.lang.Class").implementation =
+    function (className: any) {
+      send(
+        `[android.content.Context getSystemService] className: ${className}`
+      );
+      printStackTrace(getStackTrace());
+      return this.getSystemService(className);
+    };
+  //#endregion
+
+  //#region android.net.wifi.WifiInfo
+  const WifiInfo = Java.use("android.net.wifi.WifiInfo");
+  WifiInfo.getMacAddress.implementation = function () {
+    send(`[android.net.wifi.WifiInfo getMacAddress]`);
+    printStackTrace(getStackTrace());
+    return this.getMacAddress();
   };
   //#endregion
 });
