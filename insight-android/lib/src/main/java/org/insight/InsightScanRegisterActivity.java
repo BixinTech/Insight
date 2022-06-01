@@ -171,7 +171,9 @@ public class InsightScanRegisterActivity extends AppCompatActivity {
                         if (requesting) {
                         } else {
                             requesting = true;
-                            runOnUiThread(() -> circularProgressIndicator.setVisibility(View.VISIBLE));
+                            runOnUiThread(() -> {
+                                circularProgressIndicator.setVisibility(View.VISIBLE);
+                            });
 
                             String registerUrl = barcode.getRawValue();
                             Context context = InsightScanRegisterActivity.this.getApplicationContext();
@@ -182,13 +184,13 @@ public class InsightScanRegisterActivity extends AppCompatActivity {
                                     @Override
                                     public void onFailure(@NonNull Call call, @NonNull IOException e) {
                                         requesting = false;
-                                        runOnUiThread(() -> circularProgressIndicator.setVisibility(View.GONE));
+                                        runOnUiThread(() -> {
+                                            circularProgressIndicator.setVisibility(View.GONE);
+                                        });
                                     }
 
                                     @Override
                                     public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                                        requesting = false;
-                                        runOnUiThread(() -> circularProgressIndicator.setVisibility(View.GONE));
 
                                         if (response.isSuccessful()) {
                                             String responseString = Objects.requireNonNull(response.body()).string();
@@ -200,14 +202,18 @@ public class InsightScanRegisterActivity extends AppCompatActivity {
                                             JSONObject data = jsonObject.getJSONObject("data");
                                             String message = jsonObject.getString("message");
 
-                                            if (code == 8000) {
+                                            runOnUiThread(() -> {
+                                                Toast.makeText(InsightScanRegisterActivity.this, message, Toast.LENGTH_LONG).show();
                                                 finish();
-                                            }
-
-                                            runOnUiThread(() -> Toast.makeText(InsightScanRegisterActivity.this, message, Toast.LENGTH_LONG).show());
+                                            });
                                         } else {
                                             // Request not successful
                                         }
+
+                                        requesting = false;
+                                        runOnUiThread(() -> {
+                                            circularProgressIndicator.setVisibility(View.GONE);
+                                        });
                                     }
                                 });
                             } catch (IOException e) {
