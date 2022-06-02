@@ -1,14 +1,29 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { v4 as uuidv4 } from "uuid";
+
 import reportWebVitals from "./reportWebVitals";
 
 import Dashboard from "./Dashboard";
 
 import "./index.css";
+import { WS_BASE_URL } from "./Api";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
+
+(globalThis as any).SESSION_ID = uuidv4();
+
+const ws = new WebSocket(WS_BASE_URL);
+ws.onopen = () => {
+  console.log("ws connected");
+  ws.send((globalThis as any).SESSION_ID);
+};
+ws.onmessage = (ev) => {
+  console.log(ev.data);
+};
+
 root.render(
   <React.StrictMode>
     <Dashboard />

@@ -1,5 +1,7 @@
 import { log } from "./logger";
 
+const API_BASE_URL = "http://192.168.0.108:9080";
+
 const header = Memory.alloc(16);
 header
   .writeU32(0xdeadbeef)
@@ -37,10 +39,21 @@ function printStackTrace(stackTraces: Array<string>) {
   });
 }
 
+function formatStackTrace(stackTraces: Array<string>) {
+  let result = "";
+
+  for (let index = 0; index < stackTraces.length; index++) {
+    result += stackTraces[index] + ",";
+  }
+  return result;
+}
+
 Java.perform(() => {
   const ActivityThread = Java.use("android.app.ActivityThread");
   const processName = ActivityThread.currentProcessName();
   log(processName);
+
+  const InsightApi = Java.use("org.insight.InsightApi");
 
   //#region java.io.RandomAccessFile
   const RandomAccessFile = Java.use("java.io.RandomAccessFile");
@@ -50,6 +63,11 @@ Java.perform(() => {
   ).implementation = function (file: string, mode) {
     send(`[java.io.RandomAccessFile $init] file: ${file}, mode: ${mode}`);
     printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      `[java.io.RandomAccessFile $init] file: ${file}, mode: ${mode}`,
+      formatStackTrace(getStackTrace())
+    );
     this.$init(file, mode);
   };
   RandomAccessFile.$init.overload(

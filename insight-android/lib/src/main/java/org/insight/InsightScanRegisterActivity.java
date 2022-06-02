@@ -35,6 +35,12 @@ import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.common.InputImage;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -176,11 +182,19 @@ public class InsightScanRegisterActivity extends AppCompatActivity {
                             });
 
                             String registerUrl = barcode.getRawValue();
+
+                            try {
+                                URL url = new URL(registerUrl);
+                                Map<String, String> queryMap = splitQuery(url);
+                                InsightApi.SESSION_ID = queryMap.get("SESSION_ID");
+                            } catch (MalformedURLException | UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
                             Context context = InsightScanRegisterActivity.this.getApplicationContext();
                             WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
                             String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
                             try {
-                                InsightApi.getInstance().register(registerUrl + "?ip=" + ip).enqueue(new Callback() {
+                                InsightApi.getInstance().register(registerUrl + "&ip=" + ip).enqueue(new Callback() {
                                     @Override
                                     public void onFailure(@NonNull Call call, @NonNull IOException e) {
                                         requesting = false;
@@ -253,5 +267,16 @@ public class InsightScanRegisterActivity extends AppCompatActivity {
         }
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    public static Map<String, String> splitQuery(URL url) throws UnsupportedEncodingException {
+        Map<String, String> query_pairs = new LinkedHashMap<>();
+        String query = url.getQuery();
+        String[] pairs = query.split("&");
+        for (String pair : pairs) {
+            int idx = pair.indexOf("=");
+            query_pairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"), URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
+        }
+        return query_pairs;
     }
 }

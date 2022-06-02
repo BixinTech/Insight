@@ -1,6 +1,7 @@
 import axios from "axios";
 
 export const API_BASE_URL = "http://192.168.0.108:9080";
+export const WS_BASE_URL = "ws://192.168.0.108:9081";
 
 const Api = axios.create({
   baseURL: `${API_BASE_URL}`,

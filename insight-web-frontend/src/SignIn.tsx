@@ -40,7 +40,11 @@ export default function SignIn() {
       >
         <Box>
           <QRCodeSVG
-            value={API_BASE_URL + "/register"}
+            value={
+              API_BASE_URL +
+              "/register?SESSION_ID=" +
+              (globalThis as any).SESSION_ID
+            }
             style={{ width: 300, height: 300 }}
           />
           ,

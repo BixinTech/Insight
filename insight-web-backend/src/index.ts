@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { ChildProcessWithoutNullStreams, spawn } from "child_process";
+import WebSocket, { WebSocketServer } from "ws";
 
 class ResponseCode {
   static SUCCESS: number = 8000;
@@ -13,7 +14,17 @@ interface Response {
   data: any;
 }
 
-const registry = new Map<string, ChildProcessWithoutNullStreams>();
+interface Entity {
+  process: ChildProcessWithoutNullStreams;
+  sessionId: string;
+}
+
+function ab2str(buf: ArrayBuffer) {
+  return String.fromCharCode.apply(null, new Uint16Array(buf) as any);
+}
+
+const registry = new Map<string, Entity>();
+const sockets = new Map<string, WebSocket>();
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
@@ -37,7 +48,7 @@ app.get("/register", (request, response) => {
     }
   }
 
-  if (request.query.ip) {
+  if (request.query.ip && request.query.SESSION_ID) {
     if (registry.has(request.query.ip as string)) {
       response.send({
         code: ResponseCode.FAILURE,
@@ -86,7 +97,13 @@ app.get("/register", (request, response) => {
                 date: Date.now(),
               },
             } as Response);
-            registry.set(request.query.ip as string, childProcess);
+            registry.set(
+              request.query.ip as string,
+              {
+                process: childProcess,
+                sessionId: request.query.SESSION_ID,
+              } as Entity
+            );
           } else {
             response.send({
               code: ResponseCode.FAILURE,
@@ -94,12 +111,12 @@ app.get("/register", (request, response) => {
             } as Response);
           }
         }
-      }, 5000);
+      }, 6000);
     }
   } else {
     response.send({
       code: ResponseCode.FAILURE,
-      message: "parameter ip is missing",
+      message: "parameter ip or SESSION_ID is missing",
     } as Response);
   }
 });
@@ -113,6 +130,69 @@ app.get("/connections/retrieveAll", (request, response) => {
   } as Response);
 });
 
+app.post("/flush", (request, response) => {
+  if (request.body.SESSION_ID) {
+    if (sockets.has(request.body.SESSION_ID as string)) {
+      const socket = sockets.get(request.body.SESSION_ID as string);
+      socket?.send(
+        JSON.stringify({
+          signature: request.body.signature,
+          stackTrace: request.body.stackTrace,
+        })
+      );
+      response.send({
+        code: ResponseCode.SUCCESS,
+        message: "flush success",
+      } as Response);
+    } else {
+      response.send({
+        code: ResponseCode.FAILURE,
+        message: "socket does not exists",
+      } as Response);
+    }
+  } else {
+    response.send({
+      code: ResponseCode.FAILURE,
+      message: "parameter SESSION_ID is missing",
+    } as Response);
+  }
+});
+
 app.listen(9080, () => {
   console.log("insight web backend listening on port 9080!");
+});
+
+const wss = new WebSocketServer({
+  port: 9081,
+  perMessageDeflate: {
+    zlibDeflateOptions: {
+      // See zlib defaults.
+      chunkSize: 1024,
+      memLevel: 7,
+      level: 3,
+    },
+    zlibInflateOptions: {
+      chunkSize: 10 * 1024,
+    },
+    // Other options settable:
+    clientNoContextTakeover: true, // Defaults to negotiated value.
+    serverNoContextTakeover: true, // Defaults to negotiated value.
+    serverMaxWindowBits: 10, // Defaults to negotiated value.
+    // Below options specified as default values.
+    concurrencyLimit: 10, // Limits zlib concurrency for perf.
+    threshold: 1024, // Size (in bytes) below which messages
+    // should not be compressed if context takeover is disabled.
+  },
+});
+
+wss.on("connection", (socket, request) => {
+  socket.on("message", (data, isBinary) => {
+    const uuid = ab2str(data as any);
+    sockets.set(uuid, socket);
+    console.log(uuid + " on message");
+    socket.onclose = (event: WebSocket.CloseEvent) => {
+      sockets.delete(uuid);
+      console.log(uuid + "on close");
+    };
+  });
 });
