@@ -18,10 +18,15 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import QrCode2Icon from "@mui/icons-material/QrCode2";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import LinkSharp from "@mui/icons-material/LinkSharp";
 
-import { mainListItems } from "./listItems";
 import { SimpleDialog } from "./SimpleDialog";
 import Connections from "./Connections";
+import XTerm from "./Xterm";
 
 function Copyright(props: any) {
   return (
@@ -100,6 +105,10 @@ function DashboardContent() {
   };
 
   const [qrCodeDialogOpen, setQrDialogOpen] = React.useState(false);
+
+  const xterm = <XTerm />;
+  const connections = <Connections />;
+  const [currentComponent, setCurrentComponent] = React.useState(xterm);
 
   const handleClickOpen = () => {
     setQrDialogOpen(true);
@@ -181,7 +190,30 @@ function DashboardContent() {
             </IconButton>
           </Toolbar>
           <Divider />
-          <List component="nav">{mainListItems}</List>
+          <List component="nav">
+            <React.Fragment>
+              <ListItemButton
+                onClick={() => {
+                  setCurrentComponent(xterm);
+                }}
+              >
+                <ListItemIcon>
+                  <DashboardIcon />
+                </ListItemIcon>
+                <ListItemText primary="Dashboard" />
+              </ListItemButton>
+              <ListItemButton
+                onClick={() => {
+                  setCurrentComponent(connections);
+                }}
+              >
+                <ListItemIcon>
+                  <LinkSharp />
+                </ListItemIcon>
+                <ListItemText primary="Connections" />
+              </ListItemButton>
+            </React.Fragment>
+          </List>
         </Drawer>
         <Box
           component="main"
@@ -201,7 +233,7 @@ function DashboardContent() {
               {/* Connections */}
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-                  <Connections />
+                  {currentComponent}
                 </Paper>
               </Grid>
             </Grid>

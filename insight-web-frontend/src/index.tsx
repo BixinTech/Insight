@@ -8,6 +8,7 @@ import Dashboard from "./Dashboard";
 
 import "./index.css";
 import { WS_BASE_URL } from "./Api";
+import Event from "./Event";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -22,6 +23,7 @@ ws.onopen = () => {
 };
 ws.onmessage = (ev) => {
   console.log(ev.data);
+  Event.emit("flush", ev.data);
 };
 
 root.render(
