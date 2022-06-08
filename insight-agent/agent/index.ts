@@ -287,5 +287,75 @@ Java.perform(() => {
     printStackTrace(getStackTrace());
     return this.getMacAddress();
   };
+
+  WifiInfo.getSSID.implementation = function () {
+    send(`[android.net.wifi.WifiInfo getSSID]`);
+    printStackTrace(getStackTrace());
+    return this.getSSID();
+  };
+  //#endregion
+
+  //#region android.net.NetworkInfo
+  const NetworkInfo = Java.use("android.net.NetworkInfo");
+  NetworkInfo.getExtraInfo.implementation = function () {
+    send(`[android.net.NetworkInfo getExtraInfo]`);
+    printStackTrace(getStackTrace());
+    return this.getExtraInfo();
+  };
+  //#endregion
+
+  //#region java.lang.Runtime
+  const Runtime = Java.use("java.lang.Runtime");
+  Runtime.exec.overload("java.lang.String").implementation = function (
+    command: string
+  ) {
+    send(`[java.lang.Runtime exec] command: ${command}`);
+    printStackTrace(getStackTrace());
+    return this.exec(command);
+  };
+  //#endregion
+
+  //#region android.location.LocationManager
+  const LocationManager = Java.use("android.location.LocationManager");
+  LocationManager.$init.implementation = function () {
+    send(`[android.location.LocationManager $init]`);
+    printStackTrace(getStackTrace());
+    this.$init();
+  };
+  LocationManager.requestLocationUpdates.overload(
+    "java.lang.String",
+    "long",
+    "float",
+    "android.location.LocationListener",
+    "android.os.Looper"
+  ).implementation = function (
+    provider: any,
+    minTimeMs: any,
+    minDistanceM: any,
+    listener: any,
+    looper: any
+  ) {
+    send(
+      `[android.location.LocationManager requestLocationUpdates] provider: ${provider}`
+    );
+    printStackTrace(getStackTrace());
+    this.requestLocationUpdates(
+      provider,
+      minTimeMs,
+      minDistanceM,
+      listener,
+      looper
+    );
+  };
+
+  LocationManager.getLastKnownLocation.implementation = function (
+    provider: any
+  ) {
+    send(
+      `[android.location.LocationManager getLastKnownLocation] provider: ${provider}`
+    );
+    printStackTrace(getStackTrace());
+    return this.getLastKnownLocation(provider);
+  };
   //#endregion
 });
