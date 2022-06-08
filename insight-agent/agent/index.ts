@@ -53,7 +53,7 @@ Java.perform(() => {
   const processName = ActivityThread.currentProcessName();
   log(processName);
 
-  const InsightApi = Java.use("org.insight.InsightApi");
+  const InsightApi = Java.use("cn.bixin.InsightApi");
 
   //#region java.io.RandomAccessFile
   const RandomAccessFile = Java.use("java.io.RandomAccessFile");
