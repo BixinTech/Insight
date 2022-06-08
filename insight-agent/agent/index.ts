@@ -1,6 +1,6 @@
 import { log } from "./logger";
 
-const API_BASE_URL = "http://192.168.0.108:9080";
+const API_BASE_URL = "http://insight-app.yupaopao.com:9080";
 
 const header = Memory.alloc(16);
 header
