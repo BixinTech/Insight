@@ -131,23 +131,31 @@ app.get("/connections/retrieveAll", (request, response) => {
 });
 
 app.post("/flush", (request, response) => {
-  if (request.body.SESSION_ID) {
-    if (sockets.has(request.body.SESSION_ID as string)) {
-      const socket = sockets.get(request.body.SESSION_ID as string);
-      socket?.send(
-        JSON.stringify({
-          signature: request.body.signature,
-          stackTrace: request.body.stackTrace,
-        })
-      );
-      response.send({
-        code: ResponseCode.SUCCESS,
-        message: "flush success",
-      } as Response);
+  if (request.body.IP) {
+    const SESSION_ID = registry.get(request.body.IP)!!.sessionId;
+    if (SESSION_ID) {
+      if (sockets.has(SESSION_ID as string)) {
+        const socket = sockets.get(SESSION_ID as string);
+        socket?.send(
+          JSON.stringify({
+            signature: request.body.signature,
+            stackTrace: request.body.stackTrace,
+          })
+        );
+        response.send({
+          code: ResponseCode.SUCCESS,
+          message: "flush success",
+        } as Response);
+      } else {
+        response.send({
+          code: ResponseCode.FAILURE,
+          message: "socket does not exists",
+        } as Response);
+      }
     } else {
       response.send({
         code: ResponseCode.FAILURE,
-        message: "socket does not exists",
+        message: "session id does not exists",
       } as Response);
     }
   } else {

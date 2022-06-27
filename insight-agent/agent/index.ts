@@ -49,7 +49,7 @@ function formatStackTrace(stackTraces: Array<string>) {
 }
 
 function send(content: string) {
-  console.log("message::" + content)
+  console.log("message::" + content);
 }
 
 Java.perform(() => {
@@ -81,11 +81,11 @@ Java.perform(() => {
       printStackTrace(getStackTrace());
     }
 
-    // InsightApi.getInstance().flush(
-    //   API_BASE_URL + "/flush",
-    //   `[java.io.RandomAccessFile $init] file: ${file}, mode: ${mode}`,
-    //   formatStackTrace(getStackTrace())
-    // );
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      `[java.io.RandomAccessFile $init] file: ${file}, mode: ${mode}`,
+      formatStackTrace(getStackTrace())
+    );
     this.$init(file, mode);
   };
   RandomAccessFile.$init.overload(
