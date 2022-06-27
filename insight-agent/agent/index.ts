@@ -48,10 +48,19 @@ function formatStackTrace(stackTraces: Array<string>) {
   return result;
 }
 
+function send(content: string) {
+  console.log("message::" + content)
+}
+
 Java.perform(() => {
   const ActivityThread = Java.use("android.app.ActivityThread");
   const processName = ActivityThread.currentProcessName();
   log(processName);
+
+  const safeDirectories = [
+    "/storage/emulated/0/Android/data/" + processName + "/",
+    "/data/user/0/" + processName + "/",
+  ];
 
   const InsightApi = Java.use("cn.bixin.InsightApi");
 
@@ -61,21 +70,38 @@ Java.perform(() => {
     "java.io.File",
     "java.lang.String"
   ).implementation = function (file: string, mode) {
-    send(`[java.io.RandomAccessFile $init] file: ${file}, mode: ${mode}`);
-    printStackTrace(getStackTrace());
-    InsightApi.getInstance().flush(
-      API_BASE_URL + "/flush",
-      `[java.io.RandomAccessFile $init] file: ${file}, mode: ${mode}`,
-      formatStackTrace(getStackTrace())
-    );
+    let skip = false;
+    safeDirectories.forEach((safeDirectory) => {
+      if (file.toString().includes(safeDirectory)) {
+        skip = true;
+      }
+    });
+    if (!skip) {
+      send(`[java.io.RandomAccessFile $init] file: ${file}, mode: ${mode}`);
+      printStackTrace(getStackTrace());
+    }
+
+    // InsightApi.getInstance().flush(
+    //   API_BASE_URL + "/flush",
+    //   `[java.io.RandomAccessFile $init] file: ${file}, mode: ${mode}`,
+    //   formatStackTrace(getStackTrace())
+    // );
     this.$init(file, mode);
   };
   RandomAccessFile.$init.overload(
     "java.lang.String",
     "java.lang.String"
   ).implementation = function (name: string, mode) {
-    send(`[java.io.RandomAccessFile $init] name: ${name}, mode: ${mode}`);
-    printStackTrace(getStackTrace());
+    let skip = false;
+    safeDirectories.forEach((safeDirectory) => {
+      if (name.includes(safeDirectory)) {
+        skip = true;
+      }
+    });
+    if (!skip) {
+      send(`[java.io.RandomAccessFile $init] name: ${name}, mode: ${mode}`);
+      printStackTrace(getStackTrace());
+    }
     this.$init(name, mode);
   };
   //#endregion
@@ -104,36 +130,70 @@ Java.perform(() => {
   FileOutputStream.$init.overload("java.io.File").implementation = function (
     file
   ) {
-    send(`[java.io.FileOutputStream $init] file: ${file}`);
     const absolutePath = file.getAbsolutePath().toString() as string;
-    printStackTrace(getStackTrace());
+    let skip = false;
+    safeDirectories.forEach((safeDirectory) => {
+      if (absolutePath.includes(safeDirectory)) {
+        skip = true;
+      }
+    });
+    if (!skip) {
+      send(`[java.io.FileOutputStream $init] file: ${file}`);
+      printStackTrace(getStackTrace());
+    }
 
     this.$init(file);
   };
 
   FileOutputStream.$init.overload("java.io.FileDescriptor").implementation =
     function (fdObj) {
-      send(`[java.io.FileOutputStream $init] fdObj: ${fdObj}`);
       const fdId = fdObj.getInt$();
       const Paths = Java.use("java.nio.file.Paths");
       const path = Paths.get(`/proc/self/fd/${fdId}`, []);
       const Files = Java.use("java.nio.file.Files");
       const absolutePath = Files.readSymbolicLink(path).toString();
-      printStackTrace(getStackTrace());
+      let skip = false;
+      safeDirectories.forEach((safeDirectory) => {
+        if (absolutePath.includes(safeDirectory)) {
+          skip = true;
+        }
+      });
+      if (!skip) {
+        send(`[java.io.FileOutputStream $init] fdObj: ${fdObj}`);
+        printStackTrace(getStackTrace());
+      }
       this.$init(fdObj);
     };
 
   FileOutputStream.$init.overload("java.lang.String").implementation =
     function (name) {
-      send(`[java.io.FileOutputStream $init] name: ${name}`);
-      printStackTrace(getStackTrace());
+      let skip = false;
+      safeDirectories.forEach((safeDirectory) => {
+        if (name.includes(safeDirectory)) {
+          skip = true;
+        }
+      });
+      if (!skip) {
+        send(`[java.io.FileOutputStream $init] name: ${name}`);
+        printStackTrace(getStackTrace());
+      }
       this.$init(name);
     };
 
   FileOutputStream.$init.overload("java.io.File", "boolean").implementation =
     function (file, append) {
-      send(`[java.io.FileOutputStream $init] file: ${file}, append: ${append}`);
-      printStackTrace(getStackTrace());
+      let skip = false;
+      safeDirectories.forEach((safeDirectory) => {
+        if (file.getAbsolutePath().includes(safeDirectory)) {
+          skip = true;
+        }
+      });
+      if (!skip) {
+        send(
+          `[java.io.FileOutputStream $init] file: ${file}, append: ${append}`
+        );
+        printStackTrace(getStackTrace());
+      }
       this.$init(file, append);
     };
 
@@ -141,13 +201,23 @@ Java.perform(() => {
     "java.io.FileDescriptor",
     "boolean"
   ).implementation = function (fdObj, append) {
-    send(`[java.io.FileOutputStream $init] fdObj: ${fdObj}, append: ${append}`);
     const fdId = fdObj.getInt$();
     const Paths = Java.use("java.nio.file.Paths");
     const path = Paths.get(`/proc/self/fd/${fdId}`, []);
     const Files = Java.use("java.nio.file.Files");
     const absolutePath = Files.readSymbolicLink(path).toString();
-    printStackTrace(getStackTrace());
+    let skip = false;
+    safeDirectories.forEach((safeDirectory) => {
+      if (absolutePath.includes(safeDirectory)) {
+        skip = true;
+      }
+    });
+    if (!skip) {
+      send(
+        `[java.io.FileOutputStream $init] fdObj: ${fdObj}, append: ${append}`
+      );
+      printStackTrace(getStackTrace());
+    }
     this.$init(fdObj, append);
   };
 
@@ -155,8 +225,16 @@ Java.perform(() => {
     "java.lang.String",
     "boolean"
   ).implementation = function (name, append) {
-    send(`[java.io.FileOutputStream $init] name: ${name}, append: ${append}`);
-    printStackTrace(getStackTrace());
+    let skip = false;
+    safeDirectories.forEach((safeDirectory) => {
+      if (name.includes(safeDirectory)) {
+        skip = true;
+      }
+    });
+    if (!skip) {
+      send(`[java.io.FileOutputStream $init] name: ${name}, append: ${append}`);
+      printStackTrace(getStackTrace());
+    }
     this.$init(name, append);
   };
 
@@ -220,8 +298,16 @@ Java.perform(() => {
   FileInputStream.$init.overload("java.io.File").implementation = function (
     file
   ) {
-    send(`[java.io.FileInputStream $init] file: ${file}`);
-    printStackTrace(getStackTrace());
+    let skip = false;
+    safeDirectories.forEach((safeDirectory) => {
+      if (file.getAbsolutePath().includes(safeDirectory)) {
+        skip = true;
+      }
+    });
+    if (!skip) {
+      send(`[java.io.FileInputStream $init] file: ${file}`);
+      printStackTrace(getStackTrace());
+    }
     this.$init(file);
   };
   //#endregion
