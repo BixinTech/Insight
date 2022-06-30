@@ -47,7 +47,6 @@ export default function SignIn() {
             }
             style={{ width: 300, height: 300 }}
           />
-          ,
         </Box>
       </Box>
       <Copyright sx={{ mt: 8, mb: 4 }} />

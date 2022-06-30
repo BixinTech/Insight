@@ -18,15 +18,17 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import QrCode2Icon from "@mui/icons-material/QrCode2";
+import NetworkCheckIcon from "@mui/icons-material/NetworkCheck";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import LinkSharp from "@mui/icons-material/LinkSharp";
 
-import { SimpleDialog } from "./SimpleDialog";
+import { SignInQrCodeDialog } from "./SignInQrCodeDialog";
 import Connections from "./Connections";
 import XTerm from "./Xterm";
+import { SignInIpDialog } from "./SignInIpDialog";
 
 function Copyright(props: any) {
   return (
@@ -105,17 +107,26 @@ function DashboardContent() {
   };
 
   const [qrCodeDialogOpen, setQrDialogOpen] = React.useState(false);
+  const [ipDialogOpen, setIpDialogOpen] = React.useState(false);
 
   const xterm = <XTerm />;
   const connections = <Connections />;
   const [currentComponent, setCurrentComponent] = React.useState(xterm);
 
-  const handleClickOpen = () => {
+  const handleQrCodeOpen = () => {
     setQrDialogOpen(true);
   };
 
-  const handleClose = () => {
+  const handleQrCodeClose = () => {
     setQrDialogOpen(false);
+  };
+
+  const handleIpOpen = () => {
+    setIpDialogOpen(true);
+  };
+
+  const handleIpClose = () => {
+    setIpDialogOpen(false);
   };
 
   return (
@@ -172,10 +183,13 @@ function DashboardContent() {
                 justifyContent: "space-between",
               }}
             >
-              <IconButton onClick={handleClickOpen}>
+              <IconButton onClick={handleQrCodeOpen}>
                 <QrCode2Icon />
               </IconButton>
-              <SimpleDialog open={qrCodeDialogOpen} onClose={handleClose} />
+              <SignInQrCodeDialog
+                open={qrCodeDialogOpen}
+                onClose={handleQrCodeClose}
+              />
               <Typography
                 variant="body1"
                 color="inherit"
@@ -183,6 +197,26 @@ function DashboardContent() {
                 sx={{ flexGrow: 1, marginLeft: "5px" }}
               >
                 Scan
+              </Typography>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <IconButton onClick={handleIpOpen}>
+                <NetworkCheckIcon />
+              </IconButton>
+              <SignInIpDialog open={ipDialogOpen} onClose={handleIpClose} />
+              <Typography
+                variant="body1"
+                color="inherit"
+                noWrap
+                sx={{ flexGrow: 1, marginLeft: "5px" }}
+              >
+                IP
               </Typography>
             </div>
             <IconButton onClick={toggleDrawer}>

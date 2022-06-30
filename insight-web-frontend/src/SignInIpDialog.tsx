@@ -3,17 +3,17 @@ import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import DialogTitle from "@mui/material/DialogTitle";
 import Dialog from "@mui/material/Dialog";
-import LockOutlinedIcon from "@mui/icons-material/CameraAltOutlined";
+import EditIcon from '@mui/icons-material/Edit';
 import Typography from "@mui/material/Typography";
 
-import SignIn from "./SignIn";
+import IpBox from "./IpBox";
 
-export interface SimpleDialogProps {
+export interface SignInIpDialogProps {
   open: boolean;
   onClose: () => void;
 }
 
-export function SimpleDialog(props: SimpleDialogProps) {
+export function SignInIpDialog(props: SignInIpDialogProps) {
   const { onClose, open } = props;
 
   const handleClose = () => {
@@ -26,13 +26,11 @@ export function SimpleDialog(props: SimpleDialogProps) {
         sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
       >
         <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-          <LockOutlinedIcon />
+          <EditIcon />
         </Avatar>
-        <Typography>
-          Insight
-        </Typography>
+        <Typography>Insight</Typography>
       </DialogTitle>
-      <SignIn />
+      <IpBox />
     </Dialog>
   );
 }
