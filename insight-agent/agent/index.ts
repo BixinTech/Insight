@@ -77,15 +77,17 @@ Java.perform(() => {
       }
     });
     if (!skip) {
-      send(`[java.io.RandomAccessFile $init] file: ${file}, mode: ${mode}`);
+      const signature = `[java.io.RandomAccessFile $init] file: ${file}, mode: ${mode}`;
+      send(signature);
       printStackTrace(getStackTrace());
+
+      InsightApi.getInstance().flush(
+        API_BASE_URL + "/flush",
+        signature,
+        formatStackTrace(getStackTrace())
+      );
     }
 
-    InsightApi.getInstance().flush(
-      API_BASE_URL + "/flush",
-      `[java.io.RandomAccessFile $init] file: ${file}, mode: ${mode}`,
-      formatStackTrace(getStackTrace())
-    );
     this.$init(file, mode);
   };
   RandomAccessFile.$init.overload(
@@ -99,8 +101,15 @@ Java.perform(() => {
       }
     });
     if (!skip) {
-      send(`[java.io.RandomAccessFile $init] name: ${name}, mode: ${mode}`);
+      const signature = `[java.io.RandomAccessFile $init] name: ${name}, mode: ${mode}`;
+      send(signature);
       printStackTrace(getStackTrace());
+
+      InsightApi.getInstance().flush(
+        API_BASE_URL + "/flush",
+        signature,
+        formatStackTrace(getStackTrace())
+      );
     }
     this.$init(name, mode);
   };
@@ -109,8 +118,14 @@ Java.perform(() => {
   //#region android.app.ActivityManager
   const ActivityManager = Java.use("android.app.ActivityManager");
   ActivityManager.getRunningAppProcesses.implementation = function () {
-    send(`[android.app.ActivityManager getRunningAppProcesses]`);
+    const signature = `[android.app.ActivityManager getRunningAppProcesses]`;
+    send(signature);
     printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
     return this.getRunningAppProcesses();
   };
   //#endregion
@@ -118,8 +133,14 @@ Java.perform(() => {
   //#region java.net.NetworkInterface
   const NetworkInterface = Java.use("java.net.NetworkInterface");
   NetworkInterface.getHardwareAddress.implementation = function () {
-    send(`[java.net.NetworkInterface getHardwareAddress]`);
+    const signature = `[java.net.NetworkInterface getHardwareAddress]`;
+    send(signature);
     printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
     return this.getHardwareAddress();
   };
   //#endregion
@@ -138,8 +159,14 @@ Java.perform(() => {
       }
     });
     if (!skip) {
-      send(`[java.io.FileOutputStream $init] file: ${file}`);
+      const signature = `[java.io.FileOutputStream $init] file: ${file}`;
+      send(signature);
       printStackTrace(getStackTrace());
+      InsightApi.getInstance().flush(
+        API_BASE_URL + "/flush",
+        signature,
+        formatStackTrace(getStackTrace())
+      );
     }
 
     this.$init(file);
@@ -159,8 +186,14 @@ Java.perform(() => {
         }
       });
       if (!skip) {
-        send(`[java.io.FileOutputStream $init] fdObj: ${fdObj}`);
+        const signature = `[java.io.FileOutputStream $init] fdObj: ${fdObj}`;
+        send(signature);
         printStackTrace(getStackTrace());
+        InsightApi.getInstance().flush(
+          API_BASE_URL + "/flush",
+          signature,
+          formatStackTrace(getStackTrace())
+        );
       }
       this.$init(fdObj);
     };
@@ -174,8 +207,14 @@ Java.perform(() => {
         }
       });
       if (!skip) {
-        send(`[java.io.FileOutputStream $init] name: ${name}`);
+        const signature = `[java.io.FileOutputStream $init] name: ${name}`;
+        send(signature);
         printStackTrace(getStackTrace());
+        InsightApi.getInstance().flush(
+          API_BASE_URL + "/flush",
+          signature,
+          formatStackTrace(getStackTrace())
+        );
       }
       this.$init(name);
     };
@@ -189,10 +228,14 @@ Java.perform(() => {
         }
       });
       if (!skip) {
-        send(
-          `[java.io.FileOutputStream $init] file: ${file}, append: ${append}`
-        );
+        const signature = `[java.io.FileOutputStream $init] file: ${file}, append: ${append}`;
+        send(signature);
         printStackTrace(getStackTrace());
+        InsightApi.getInstance().flush(
+          API_BASE_URL + "/flush",
+          signature,
+          formatStackTrace(getStackTrace())
+        );
       }
       this.$init(file, append);
     };
@@ -213,10 +256,14 @@ Java.perform(() => {
       }
     });
     if (!skip) {
-      send(
-        `[java.io.FileOutputStream $init] fdObj: ${fdObj}, append: ${append}`
-      );
+      const signature = `[java.io.FileOutputStream $init] fdObj: ${fdObj}, append: ${append}`;
+      send(signature);
       printStackTrace(getStackTrace());
+      InsightApi.getInstance().flush(
+        API_BASE_URL + "/flush",
+        signature,
+        formatStackTrace(getStackTrace())
+      );
     }
     this.$init(fdObj, append);
   };
@@ -232,8 +279,14 @@ Java.perform(() => {
       }
     });
     if (!skip) {
-      send(`[java.io.FileOutputStream $init] name: ${name}, append: ${append}`);
+      const signature = `[java.io.FileOutputStream $init] name: ${name}, append: ${append}`;
+      send(signature);
       printStackTrace(getStackTrace());
+      InsightApi.getInstance().flush(
+        API_BASE_URL + "/flush",
+        signature,
+        formatStackTrace(getStackTrace())
+      );
     }
     this.$init(name, append);
   };
@@ -247,10 +300,14 @@ Java.perform(() => {
     name: string,
     userHandle: number
   ) {
-    send(
-      `[android.provider.Settings$Secure getStringForUser] contentResolver: ${contentResolver}, name: ${name}, userHandle: ${userHandle}`
-    );
+    const signature = `[android.provider.Settings$Secure getStringForUser] contentResolver: ${contentResolver}, name: ${name}, userHandle: ${userHandle}`;
+    send(signature);
     printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
     return this.getStringForUser(contentResolver, name, userHandle);
   };
   //#endregion
@@ -260,16 +317,28 @@ Java.perform(() => {
   SystemProperties.get.overload("java.lang.String").implementation = function (
     key: string
   ) {
-    send(`[android.os.SystemProperties get] key: ${key}`);
+    const signature = `[android.os.SystemProperties get] key: ${key}`;
+    send(signature);
     printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
     return this.get(key);
   };
   SystemProperties.get.overload(
     "java.lang.String",
     "java.lang.String"
   ).implementation = function (key: string, def: string) {
-    send(`[android.os.SystemProperties get] key: ${key}, def: ${def}`);
+    const signature = `[android.os.SystemProperties get] key: ${key}, def: ${def}`;
+    send(signature);
     printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
     return this.get(key, def);
   };
   //#endregion
@@ -278,8 +347,14 @@ Java.perform(() => {
   const ContextImpl = Java.use("android.app.ContextImpl");
   ContextImpl.sendBroadcast.overload("android.content.Intent").implementation =
     function (intent: any) {
-      send(`[android.app.ContextImpl sendBroadcast] intent: ${intent}`);
+      const signature = `[android.app.ContextImpl sendBroadcast] intent: ${intent}`;
+      send(signature);
       printStackTrace(getStackTrace());
+      InsightApi.getInstance().flush(
+        API_BASE_URL + "/flush",
+        signature,
+        formatStackTrace(getStackTrace())
+      );
       this.sendBroadcast(intent);
     };
   //#endregion
@@ -287,8 +362,14 @@ Java.perform(() => {
   //#region java.io.File
   const File = Java.use("java.io.File");
   File.delete.implementation = function () {
-    send(`[java.io.File delete]`);
+    const signature = `[java.io.File delete]`;
+    send(signature);
     printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
     return this.delete();
   };
   //#endregion
@@ -305,8 +386,14 @@ Java.perform(() => {
       }
     });
     if (!skip) {
-      send(`[java.io.FileInputStream $init] file: ${file}`);
+      const signature = `[java.io.FileInputStream $init] file: ${file}`;
+      send(signature);
       printStackTrace(getStackTrace());
+      InsightApi.getInstance().flush(
+        API_BASE_URL + "/flush",
+        signature,
+        formatStackTrace(getStackTrace())
+      );
     }
     this.$init(file);
   };
@@ -327,10 +414,14 @@ Java.perform(() => {
     workSource: any,
     alarmClock: any
   ) {
-    send(
-      `[android.app.AlarmManager $setImpl] type: ${type}, triggerAtMillis: ${triggerAtMillis}`
-    );
+    const signature = `[android.app.AlarmManager $setImpl] type: ${type}, triggerAtMillis: ${triggerAtMillis}`;
+    send(signature);
     printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
     this.setImpl(
       type,
       triggerAtMillis,
@@ -351,17 +442,27 @@ Java.perform(() => {
   const Context = Java.use("android.content.Context");
   Context.getSystemService.overload("java.lang.String").implementation =
     function (name: any) {
-      send(`[android.content.Context getSystemService] name: ${name}`);
+      const signature = `[android.content.Context getSystemService] name: ${name}`;
+      send(signature);
       printStackTrace(getStackTrace());
+      InsightApi.getInstance().flush(
+        API_BASE_URL + "/flush",
+        signature,
+        formatStackTrace(getStackTrace())
+      );
       return this.getSystemService(name);
     };
 
   Context.getSystemService.overload("java.lang.Class").implementation =
     function (className: any) {
-      send(
-        `[android.content.Context getSystemService] className: ${className}`
-      );
+      const signature = `[android.content.Context getSystemService] className: ${className}`;
+      send(signature);
       printStackTrace(getStackTrace());
+      InsightApi.getInstance().flush(
+        API_BASE_URL + "/flush",
+        signature,
+        formatStackTrace(getStackTrace())
+      );
       return this.getSystemService(className);
     };
   //#endregion
@@ -369,14 +470,26 @@ Java.perform(() => {
   //#region android.net.wifi.WifiInfo
   const WifiInfo = Java.use("android.net.wifi.WifiInfo");
   WifiInfo.getMacAddress.implementation = function () {
-    send(`[android.net.wifi.WifiInfo getMacAddress]`);
+    const signature = `[android.net.wifi.WifiInfo getMacAddress]`;
+    send(signature);
     printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
     return this.getMacAddress();
   };
 
   WifiInfo.getSSID.implementation = function () {
-    send(`[android.net.wifi.WifiInfo getSSID]`);
+    const signature = `[android.net.wifi.WifiInfo getSSID]`;
+    send(signature);
     printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
     return this.getSSID();
   };
   //#endregion
@@ -384,8 +497,14 @@ Java.perform(() => {
   //#region android.net.NetworkInfo
   const NetworkInfo = Java.use("android.net.NetworkInfo");
   NetworkInfo.getExtraInfo.implementation = function () {
-    send(`[android.net.NetworkInfo getExtraInfo]`);
+    const signature = `[android.net.NetworkInfo getExtraInfo]`;
+    send(signature);
     printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
     return this.getExtraInfo();
   };
   //#endregion
@@ -395,8 +514,14 @@ Java.perform(() => {
   Runtime.exec.overload("java.lang.String").implementation = function (
     command: string
   ) {
-    send(`[java.lang.Runtime exec] command: ${command}`);
+    const signature = `[java.lang.Runtime exec] command: ${command}`;
+    send(signature);
     printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
     return this.exec(command);
   };
   //#endregion
@@ -404,8 +529,14 @@ Java.perform(() => {
   //#region android.location.LocationManager
   const LocationManager = Java.use("android.location.LocationManager");
   LocationManager.$init.implementation = function () {
-    send(`[android.location.LocationManager $init]`);
+    const signature = `[android.location.LocationManager $init]`;
+    send(signature);
     printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
     this.$init();
   };
   LocationManager.requestLocationUpdates.overload(
@@ -421,10 +552,14 @@ Java.perform(() => {
     listener: any,
     looper: any
   ) {
-    send(
-      `[android.location.LocationManager requestLocationUpdates] provider: ${provider}`
-    );
+    const signature = `[android.location.LocationManager requestLocationUpdates] provider: ${provider}`;
+    send(signature);
     printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
     this.requestLocationUpdates(
       provider,
       minTimeMs,
@@ -437,10 +572,14 @@ Java.perform(() => {
   LocationManager.getLastKnownLocation.implementation = function (
     provider: any
   ) {
-    send(
-      `[android.location.LocationManager getLastKnownLocation] provider: ${provider}`
-    );
+    const signature = `[android.location.LocationManager getLastKnownLocation] provider: ${provider}`;
+    send(signature);
     printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
     return this.getLastKnownLocation(provider);
   };
   //#endregion
