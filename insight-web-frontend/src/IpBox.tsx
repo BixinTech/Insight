@@ -2,11 +2,12 @@ import * as React from "react";
 
 import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
-
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-
 import { TextField, Button } from "@mui/material";
+import Snackbar, { SnackbarOrigin } from "@mui/material/Snackbar";
+import LinearProgress from "@mui/material/LinearProgress";
+
 import Api from "./Api";
 
 function Copyright(props: any) {
@@ -29,6 +30,9 @@ function Copyright(props: any) {
 
 export default function IpBox() {
   const [ip, setIp] = React.useState("");
+  const [snackSuccessOpen, setSnackSuccessOpen] = React.useState(false);
+  const [snackFailOpen, setSnackFailOpen] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -61,19 +65,51 @@ export default function IpBox() {
                 "&ip=" +
                 ip;
               console.log(url);
+              setLoading(true);
               Api.get(url)
                 .then((data) => {
+                  setLoading(false);
                   console.log(data);
                   if ((data as any).code === 8000) {
-
+                    setSnackSuccessOpen(true);
+                  } else {
+                    setSnackFailOpen(true);
                   }
                 })
-                .catch((error) => {});
+                .catch((error) => {
+                  setLoading(false);
+                });
             }}
           >
             Register
           </Button>
+          <Snackbar
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            open={snackSuccessOpen}
+            autoHideDuration={6000}
+            onClose={() => {
+              setSnackSuccessOpen(false);
+            }}
+            message="Register by IP succeed!"
+            key={"top" + "center"}
+          />
+          <Snackbar
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            open={snackFailOpen}
+            autoHideDuration={6000}
+            onClose={() => {
+              setSnackFailOpen(false);
+            }}
+            message="Register by IP failed!"
+            key={"top" + "center"}
+          />
         </Box>
+        {loading ? (
+          <Box sx={{ width: "100%" }}>
+            <br />
+            <LinearProgress />
+          </Box>
+        ) : null}
       </Box>
       <Copyright sx={{ mt: 8, mb: 4 }} />
     </Container>
