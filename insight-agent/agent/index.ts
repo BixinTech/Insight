@@ -172,31 +172,31 @@ Java.perform(() => {
     this.$init(file);
   };
 
-  FileOutputStream.$init.overload("java.io.FileDescriptor").implementation =
-    function (fdObj) {
-      const fdId = fdObj.getInt$();
-      const Paths = Java.use("java.nio.file.Paths");
-      const path = Paths.get(`/proc/self/fd/${fdId}`, []);
-      const Files = Java.use("java.nio.file.Files");
-      const absolutePath = Files.readSymbolicLink(path).toString();
-      let skip = false;
-      safeDirectories.forEach((safeDirectory) => {
-        if (absolutePath.includes(safeDirectory)) {
-          skip = true;
-        }
-      });
-      if (!skip) {
-        const signature = `[java.io.FileOutputStream $init] fdObj: ${fdObj}`;
-        send(signature);
-        printStackTrace(getStackTrace());
-        InsightApi.getInstance().flush(
-          API_BASE_URL + "/flush",
-          signature,
-          formatStackTrace(getStackTrace())
-        );
-      }
-      this.$init(fdObj);
-    };
+  // FileOutputStream.$init.overload("java.io.FileDescriptor").implementation =
+  //   function (fdObj) {
+  //     const fdId = fdObj.getInt$();
+  //     const Paths = Java.use("java.nio.file.Paths");
+  //     const path = Paths.get(`/proc/self/fd/${fdId}`, []);
+  //     const Files = Java.use("java.nio.file.Files");
+  //     const absolutePath = Files.readSymbolicLink(path).toString();
+  //     let skip = false;
+  //     safeDirectories.forEach((safeDirectory) => {
+  //       if (absolutePath.includes(safeDirectory)) {
+  //         skip = true;
+  //       }
+  //     });
+  //     if (!skip) {
+  //       const signature = `[java.io.FileOutputStream $init] fdObj: ${fdObj}`;
+  //       send(signature);
+  //       printStackTrace(getStackTrace());
+  //       InsightApi.getInstance().flush(
+  //         API_BASE_URL + "/flush",
+  //         signature,
+  //         formatStackTrace(getStackTrace())
+  //       );
+  //     }
+  //     this.$init(fdObj);
+  //   };
 
   FileOutputStream.$init.overload("java.lang.String").implementation =
     function (name) {
@@ -240,33 +240,33 @@ Java.perform(() => {
       this.$init(file, append);
     };
 
-  FileOutputStream.$init.overload(
-    "java.io.FileDescriptor",
-    "boolean"
-  ).implementation = function (fdObj, append) {
-    const fdId = fdObj.getInt$();
-    const Paths = Java.use("java.nio.file.Paths");
-    const path = Paths.get(`/proc/self/fd/${fdId}`, []);
-    const Files = Java.use("java.nio.file.Files");
-    const absolutePath = Files.readSymbolicLink(path).toString();
-    let skip = false;
-    safeDirectories.forEach((safeDirectory) => {
-      if (absolutePath.includes(safeDirectory)) {
-        skip = true;
-      }
-    });
-    if (!skip) {
-      const signature = `[java.io.FileOutputStream $init] fdObj: ${fdObj}, append: ${append}`;
-      send(signature);
-      printStackTrace(getStackTrace());
-      InsightApi.getInstance().flush(
-        API_BASE_URL + "/flush",
-        signature,
-        formatStackTrace(getStackTrace())
-      );
-    }
-    this.$init(fdObj, append);
-  };
+  // FileOutputStream.$init.overload(
+  //   "java.io.FileDescriptor",
+  //   "boolean"
+  // ).implementation = function (fdObj, append) {
+  //   const fdId = fdObj.getInt$();
+  //   const Paths = Java.use("java.nio.file.Paths");
+  //   const path = Paths.get(`/proc/self/fd/${fdId}`, []);
+  //   const Files = Java.use("java.nio.file.Files");
+  //   const absolutePath = Files.readSymbolicLink(path).toString();
+  //   let skip = false;
+  //   safeDirectories.forEach((safeDirectory) => {
+  //     if (absolutePath.includes(safeDirectory)) {
+  //       skip = true;
+  //     }
+  //   });
+  //   if (!skip) {
+  //     const signature = `[java.io.FileOutputStream $init] fdObj: ${fdObj}, append: ${append}`;
+  //     send(signature);
+  //     printStackTrace(getStackTrace());
+  //     InsightApi.getInstance().flush(
+  //       API_BASE_URL + "/flush",
+  //       signature,
+  //       formatStackTrace(getStackTrace())
+  //     );
+  //   }
+  //   this.$init(fdObj, append);
+  // };
 
   FileOutputStream.$init.overload(
     "java.lang.String",
@@ -414,7 +414,7 @@ Java.perform(() => {
     workSource: any,
     alarmClock: any
   ) {
-    const signature = `[android.app.AlarmManager $setImpl] type: ${type}, triggerAtMillis: ${triggerAtMillis}`;
+    const signature = `[android.app.AlarmManager setImpl] type: ${type}, triggerAtMillis: ${triggerAtMillis}`;
     send(signature);
     printStackTrace(getStackTrace());
     InsightApi.getInstance().flush(
