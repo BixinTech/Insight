@@ -355,6 +355,11 @@ Java.perform(() => {
       printStackTrace(getStackTrace());
       InsightApi.getInstance().flush(
         API_BASE_URL + "/flush",
+        description,
+        formatStackTrace(getStackTrace())
+      );
+      InsightApi.getInstance().flush(
+        API_BASE_URL + "/flush",
         signature,
         formatStackTrace(getStackTrace())
       );
@@ -369,6 +374,11 @@ Java.perform(() => {
       send(description);
       send(signature);
       printStackTrace(getStackTrace());
+      InsightApi.getInstance().flush(
+        API_BASE_URL + "/flush",
+        description,
+        formatStackTrace(getStackTrace())
+      );
       InsightApi.getInstance().flush(
         API_BASE_URL + "/flush",
         signature,
@@ -386,6 +396,11 @@ Java.perform(() => {
       printStackTrace(getStackTrace());
       InsightApi.getInstance().flush(
         API_BASE_URL + "/flush",
+        description,
+        formatStackTrace(getStackTrace())
+      );
+      InsightApi.getInstance().flush(
+        API_BASE_URL + "/flush",
         signature,
         formatStackTrace(getStackTrace())
       );
@@ -399,6 +414,11 @@ Java.perform(() => {
       send(description);
       send(signature);
       printStackTrace(getStackTrace());
+      InsightApi.getInstance().flush(
+        API_BASE_URL + "/flush",
+        description,
+        formatStackTrace(getStackTrace())
+      );
       InsightApi.getInstance().flush(
         API_BASE_URL + "/flush",
         signature,
@@ -609,6 +629,11 @@ Java.perform(() => {
     printStackTrace(getStackTrace());
     InsightApi.getInstance().flush(
       API_BASE_URL + "/flush",
+      description,
+      formatStackTrace(getStackTrace())
+    );
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
       signature,
       formatStackTrace(getStackTrace())
     );
@@ -639,6 +664,11 @@ Java.perform(() => {
     printStackTrace(getStackTrace());
     InsightApi.getInstance().flush(
       API_BASE_URL + "/flush",
+      description,
+      formatStackTrace(getStackTrace())
+    );
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
       signature,
       formatStackTrace(getStackTrace())
     );
@@ -664,6 +694,11 @@ Java.perform(() => {
     printStackTrace(getStackTrace());
     InsightApi.getInstance().flush(
       API_BASE_URL + "/flush",
+      description,
+      formatStackTrace(getStackTrace())
+    );
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
       signature,
       formatStackTrace(getStackTrace())
     );
@@ -687,6 +722,11 @@ Java.perform(() => {
     send(description);
     send(signature);
     printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      description,
+      formatStackTrace(getStackTrace())
+    );
     InsightApi.getInstance().flush(
       API_BASE_URL + "/flush",
       signature,
@@ -715,6 +755,11 @@ Java.perform(() => {
     printStackTrace(getStackTrace());
     InsightApi.getInstance().flush(
       API_BASE_URL + "/flush",
+      description,
+      formatStackTrace(getStackTrace())
+    );
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
       signature,
       formatStackTrace(getStackTrace())
     );
@@ -741,6 +786,11 @@ Java.perform(() => {
     send(description);
     send(signature);
     printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      description,
+      formatStackTrace(getStackTrace())
+    );
     InsightApi.getInstance().flush(
       API_BASE_URL + "/flush",
       signature,
@@ -772,6 +822,11 @@ Java.perform(() => {
     printStackTrace(getStackTrace());
     InsightApi.getInstance().flush(
       API_BASE_URL + "/flush",
+      description,
+      formatStackTrace(getStackTrace())
+    );
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
       signature,
       formatStackTrace(getStackTrace())
     );
@@ -801,6 +856,11 @@ Java.perform(() => {
     send(description);
     send(signature);
     printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      description,
+      formatStackTrace(getStackTrace())
+    );
     InsightApi.getInstance().flush(
       API_BASE_URL + "/flush",
       signature,
@@ -835,6 +895,11 @@ Java.perform(() => {
     printStackTrace(getStackTrace());
     InsightApi.getInstance().flush(
       API_BASE_URL + "/flush",
+      description,
+      formatStackTrace(getStackTrace())
+    );
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
       signature,
       formatStackTrace(getStackTrace())
     );
@@ -865,6 +930,11 @@ Java.perform(() => {
     send(description);
     send(signature);
     printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      description,
+      formatStackTrace(getStackTrace())
+    );
     InsightApi.getInstance().flush(
       API_BASE_URL + "/flush",
       signature,
