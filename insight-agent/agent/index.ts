@@ -583,4 +583,25 @@ Java.perform(() => {
     return this.getLastKnownLocation(provider);
   };
   //#endregion
+
+  //#region android.app.ApplicationPackageManager
+  const ApplicationPackageManager = Java.use(
+    "android.app.ApplicationPackageManager"
+  );
+  ApplicationPackageManager.getPackageInfoAsUser.overload(
+    "java.lang.String",
+    "int",
+    "int"
+  ).implementation = function (packageName: any, flags: any, userId: any) {
+    const signature = `[android.app.ApplicationPackageManager getPackageInfoAsUser] packageName: ${packageName}, flags: ${flags}, userId: ${userId}`;
+    send(signature);
+    printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
+    return this.getPackageInfoAsUser(packageName, flags, userId);
+  };
+  //#endregion
 });
