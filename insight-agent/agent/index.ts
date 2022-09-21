@@ -332,6 +332,7 @@ Java.perform(() => {
     "java.lang.String"
   ).implementation = function (key: string, def: string) {
     const signature = `[android.os.SystemProperties get] key: ${key}, def: ${def}`;
+
     send(signature);
     printStackTrace(getStackTrace());
     InsightApi.getInstance().flush(
@@ -348,8 +349,76 @@ Java.perform(() => {
   ContextImpl.sendBroadcast.overload("android.content.Intent").implementation =
     function (intent: any) {
       const signature = `[android.app.ContextImpl sendBroadcast] intent: ${intent}`;
+      const description = `发送系统广播:参数为intent`;
+      send(description);
       send(signature);
       printStackTrace(getStackTrace());
+      InsightApi.getInstance().flush(
+        API_BASE_URL + "/flush",
+        description,
+        formatStackTrace(getStackTrace())
+      );
+      InsightApi.getInstance().flush(
+        API_BASE_URL + "/flush",
+        signature,
+        formatStackTrace(getStackTrace())
+      );
+      this.sendBroadcast(intent);
+    };
+
+  
+    ContextImpl.sendBroadcast.overload("android.content.Intent","java.lang.String").implementation =
+    function (intent: any,receiverPermission:any) {
+      const signature = `[android.app.ContextImpl sendBroadcast] intent: ${intent}`;
+      const description = `发送系统广播：参数为intent，receiverPermission`;
+      send(description);
+      send(signature);
+      printStackTrace(getStackTrace());
+      InsightApi.getInstance().flush(
+        API_BASE_URL + "/flush",
+        description,
+        formatStackTrace(getStackTrace())
+      );
+      InsightApi.getInstance().flush(
+        API_BASE_URL + "/flush",
+        signature,
+        formatStackTrace(getStackTrace())
+      );
+      this.sendBroadcast(intent);
+    };
+
+    ContextImpl.sendBroadcast.overload("android.content.Intent","java.lang.String","android.os.Bundle").implementation =
+    function (intent: any,receiverPermission: any,options: any) {
+      const signature = `[android.app.ContextImpl sendBroadcast] intent: ${intent}`;
+      const description = `发送系统广播：参数为intent，receiverPermission,options`;
+      send(description);
+      send(signature);
+      printStackTrace(getStackTrace());
+      InsightApi.getInstance().flush(
+        API_BASE_URL + "/flush",
+        description,
+        formatStackTrace(getStackTrace())
+      );
+      InsightApi.getInstance().flush(
+        API_BASE_URL + "/flush",
+        signature,
+        formatStackTrace(getStackTrace())
+      );
+      this.sendBroadcast(intent);
+    };
+    
+    ContextImpl.sendBroadcast.overload("android.content.Intent","java.lang.String","int").implementation =
+    function (intent: any,receiverPermission:any,appOp:any) {
+      const signature = `[android.app.ContextImpl sendBroadcast] intent: ${intent}`;
+      const description = `发送系统广播:参数为intent，receiverPermission,appOp`;
+      send(description);
+      send(signature);
+      printStackTrace(getStackTrace());
+      InsightApi.getInstance().flush(
+        API_BASE_URL + "/flush",
+        description,
+        formatStackTrace(getStackTrace())
+      );
       InsightApi.getInstance().flush(
         API_BASE_URL + "/flush",
         signature,
@@ -539,6 +608,7 @@ Java.perform(() => {
     );
     this.$init();
   };
+
   LocationManager.requestLocationUpdates.overload(
     "java.lang.String",
     "long",
@@ -553,8 +623,15 @@ Java.perform(() => {
     looper: any
   ) {
     const signature = `[android.location.LocationManager requestLocationUpdates] provider: ${provider}`;
+    const description = `获取本地位置信息更新:参数为provider,minTimeMs,minDistanceM,listener,looper`;
+    send(description);
     send(signature);
     printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      description,
+      formatStackTrace(getStackTrace())
+    );
     InsightApi.getInstance().flush(
       API_BASE_URL + "/flush",
       signature,
@@ -568,6 +645,311 @@ Java.perform(() => {
       looper
     );
   };
+
+  LocationManager.requestLocationUpdates.overload(
+    "java.lang.String",
+    "long",
+    "float",
+    "android.location.LocationListener"
+  ).implementation = function (
+    provider: any,
+    minTimeMs: any,
+    minDistanceM: any,
+    listener: any
+  ) {
+    const signature = `[android.location.LocationManager requestLocationUpdates] provider: ${provider}`;
+    const description = `获取本地位置信息更新:参数为provider,minTimeMs,minDistanceM,listener`;
+    send(description);
+    send(signature);
+    printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      description,
+      formatStackTrace(getStackTrace())
+    );
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
+    this.requestLocationUpdates(
+      provider,
+      minTimeMs,
+      minDistanceM,
+      listener
+    );
+  };
+
+  LocationManager.requestLocationUpdates.overload(
+    "android.location.LocationRequest",
+    "android.app.PendingIntent"
+  ).implementation = function (
+    locationRequest: any,
+    pendingIntent: any
+  ) {
+    const signature = `[android.location.LocationManager requestLocationUpdates] locationRequest: ${locationRequest}`;
+    const description = `获取本地位置信息更新: 参数为locationRequest,pendingIntent`;
+    send(description);
+    send(signature);
+    printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      description,
+      formatStackTrace(getStackTrace())
+    );
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
+    this.requestLocationUpdates(
+      locationRequest,
+      pendingIntent
+    );
+  };
+
+  LocationManager.requestLocationUpdates.overload(
+    "android.location.LocationRequest",
+    "java.util.concurrent.Executor",
+    "android.location.LocationListener"
+  ).implementation = function (
+    locationRequest: any,
+    executor: any,
+    listener: any
+  ) {
+    const signature = `[android.location.LocationManager requestLocationUpdates] locationRequest: ${locationRequest}`;
+    const description = `获取本地位置信息更新: 参数为locationRequest,executor,listener`;
+    send(description);
+    send(signature);
+    printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      description,
+      formatStackTrace(getStackTrace())
+    );
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
+    this.requestLocationUpdates(
+      locationRequest,
+      executor,
+      listener
+    );
+  };
+
+  LocationManager.requestLocationUpdates.overload(
+    "android.location.LocationRequest",
+    "android.location.LocationListener",
+    "android.os.Looper"
+  ).implementation = function (
+    locationRequest: any,
+    listener: any,
+    looper: any
+  ) {
+    const signature = `[android.location.LocationManager requestLocationUpdates] locationRequest: ${locationRequest}`;
+    const description = `获取本地位置信息更新: 参数为locationRequest,listener,looper`;
+    send(description);
+    send(signature);
+    printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      description,
+      formatStackTrace(getStackTrace())
+    );
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
+    this.requestLocationUpdates(
+      locationRequest,
+      listener,
+      looper
+    );
+  };
+
+  LocationManager.requestLocationUpdates.overload(
+    "long",
+    "float",
+    "android.location.Criteria",
+    "android.app.PendingIntent"
+  ).implementation = function (
+    minTimeMs: any,
+    minDistanceM: any,
+    criteria: any,
+    pendingIntent: any
+  ) {
+    const signature = `[android.location.LocationManager requestLocationUpdates] minTimeMs: ${minTimeMs}`;
+    const description = `获取本地位置信息更新: 参数为 minTimeMs,minDistanceM,criteria,pendingIntent`;
+    send(description);
+    send(signature);
+    printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      description,
+      formatStackTrace(getStackTrace())
+    );
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
+    this.requestLocationUpdates(
+    minTimeMs,
+    minDistanceM,
+    criteria,
+    pendingIntent
+    );
+  };
+
+  LocationManager.requestLocationUpdates.overload(
+    "java.lang.String",
+    "long",
+    "float",
+    "android.app.PendingIntent"
+  ).implementation = function (
+    provider: any,
+    minTimeMs: any,
+    minDistanceM: any,
+    pendingIntent: any
+  ) {
+    const signature = `[android.location.LocationManager requestLocationUpdates] provider: ${provider}`;
+    const description = `获取本地位置信息更新: 参数为 provider,minTimeMs,minDistanceM,pendingIntent`;
+    send(description);
+    send(signature);
+    printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      description,
+      formatStackTrace(getStackTrace())
+    );
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
+    this.requestLocationUpdates(
+    provider,
+    minTimeMs,
+    minDistanceM,
+    pendingIntent
+    );
+  };
+
+  LocationManager.requestLocationUpdates.overload(
+    "long",
+    "float",
+    "android.location.Criteria",
+    "java.util.concurrent.Executor",
+    "android.location.LocationListener"
+  ).implementation = function (
+    minTimeMs: any,
+    minDistanceM: any,
+    criteria: any,
+    executor: any,
+    listener: any
+  ) {
+    const signature = `[android.location.LocationManager requestLocationUpdates] minTimeMs: ${minTimeMs}`;
+    const description = `获取本地位置信息更新: 参数为  minTimeMs,minDistanceM,criteria,executor,listener`;
+    send(description);
+    send(signature);
+    printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      description,
+      formatStackTrace(getStackTrace())
+    );
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
+    this.requestLocationUpdates(
+      minTimeMs,
+      minDistanceM,
+      criteria,
+      executor,
+      listener
+    );
+  };
+
+  LocationManager.requestLocationUpdates.overload(
+    "long",
+    "float",
+    "android.location.Criteria",
+    "android.location.LocationListener",
+    "android.os.Looper"
+  ).implementation = function (
+    minTimeMs: any,
+    minDistanceM: any,
+    criteria: any,
+    listener: any,
+    looper: any
+  ) {
+    const signature = `[android.location.LocationManager requestLocationUpdates] minTimeMs: ${minTimeMs}`;
+    const description = `获取本地位置信息更新: 参数为  minTimeMs,minDistanceM,criteria,listener,looper`;
+    send(description);
+    send(signature);
+    printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      description,
+      formatStackTrace(getStackTrace())
+    );
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
+    this.requestLocationUpdates(
+      minTimeMs,
+      minDistanceM,
+      criteria,
+      listener,
+      looper
+    );
+  };
+
+  LocationManager.requestLocationUpdates.overload(
+    "java.lang.String",
+    "long",
+    "float",
+    "java.util.concurrent.Executor",
+    "android.location.LocationListener"
+  ).implementation = function (
+    provider: any,
+    minTimeMs: any,
+    minDistanceM: any,
+    executor: any,
+    listener: any
+  ) {
+    const signature = `[android.location.LocationManager requestLocationUpdates] minTimeMs: ${minTimeMs}`;
+    const description = `获取本地位置信息更新: 参数为 provider, minTimeMs,minDistanceM,executor,listener`;
+    send(description);
+    send(signature);
+    printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      description,
+      formatStackTrace(getStackTrace())
+    );
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
+    this.requestLocationUpdates(
+      provider,
+      minTimeMs,
+      minDistanceM,
+      executor,
+      listener
+    );
+  };
+
+
 
   LocationManager.getLastKnownLocation.implementation = function (
     provider: any
