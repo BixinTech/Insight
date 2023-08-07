@@ -604,4 +604,46 @@ Java.perform(() => {
     return this.getPackageInfoAsUser(packageName, flags, userId);
   };
   //#endregion
+
+  //#region android.telephony.TelephonyManager
+  const TelephonyManager = Java.use("android.telephony.TelephonyManager");
+  TelephonyManager.getSimSerialNumber.implementation = function () {
+    const signature = `[android.telephony.TelephonyManager getSimSerialNumber]`;
+    send(signature);
+    printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
+    return this.getSimSerialNumber();
+  };
+
+  TelephonyManager.getDeviceId.implementation = function () {
+    const signature = `[android.telephony.TelephonyManager getDeviceId]`;
+    send(signature);
+    printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
+    return this.getDeviceId();
+  };
+  //#endregion
+
+  //#region android.os.Build
+  const Build = Java.use("android.os.Build");
+  Build.getSerial.implementation = function () {
+    const signature = `[android.os.Build getSerial]`;
+    send(signature);
+    printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
+    return this.getSerial();
+  };
+  //#endregion
 });
