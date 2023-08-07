@@ -607,7 +607,21 @@ Java.perform(() => {
 
   //#region android.telephony.TelephonyManager
   const TelephonyManager = Java.use("android.telephony.TelephonyManager");
-  TelephonyManager.getSimSerialNumber.implementation = function () {
+
+  TelephonyManager.getSimSerialNumber.overload("int").implementation =
+    function (param: any) {
+      const signature = `[android.telephony.TelephonyManager getSimSerialNumber]`;
+      send(signature);
+      printStackTrace(getStackTrace());
+      InsightApi.getInstance().flush(
+        API_BASE_URL + "/flush",
+        signature,
+        formatStackTrace(getStackTrace())
+      );
+      return this.getSimSerialNumber(param);
+    };
+
+  TelephonyManager.getSimSerialNumber.overload().implementation = function () {
     const signature = `[android.telephony.TelephonyManager getSimSerialNumber]`;
     send(signature);
     printStackTrace(getStackTrace());
@@ -619,7 +633,21 @@ Java.perform(() => {
     return this.getSimSerialNumber();
   };
 
-  TelephonyManager.getDeviceId.implementation = function () {
+  TelephonyManager.getDeviceId.overload("int").implementation = function (
+    param: any
+  ) {
+    const signature = `[android.telephony.TelephonyManager getDeviceId]`;
+    send(signature);
+    printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
+    return this.getDeviceId(param);
+  };
+
+  TelephonyManager.getDeviceId.overload().implementation = function () {
     const signature = `[android.telephony.TelephonyManager getDeviceId]`;
     send(signature);
     printStackTrace(getStackTrace());
