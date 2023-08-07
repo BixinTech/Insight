@@ -11,12 +11,12 @@ header
   .writeU64(uint64("0x1122334455667788"));
 log(hexdump(header.readByteArray(16) as ArrayBuffer, { ansi: true }));
 
-Process.getModuleByName("libfrida-gadget.so")
-  .enumerateExports()
-  .slice(0, 16)
-  .forEach((exp, index) => {
-    log(`export ${index}: ${exp.name}`);
-  });
+// Process.getModuleByName("libfrida-gadget.so")
+//   .enumerateExports()
+//   .slice(0, 16)
+//   .forEach((exp, index) => {
+//     log(`export ${index}: ${exp.name}`);
+//   });
 
 // Interceptor.attach(Module.getExportByName(null, "open"), {
 //   onEnter(args) {
@@ -401,7 +401,19 @@ Java.perform(() => {
 
   //#region android.app.AlarmManager
   const AlarmManager = Java.use("android.app.AlarmManager");
-  AlarmManager.setImpl.implementation = function (
+  AlarmManager.setImpl.overload(
+    "int",
+    "long",
+    "long",
+    "long",
+    "int",
+    "android.app.PendingIntent",
+    "android.app.AlarmManager$OnAlarmListener",
+    "java.lang.String",
+    "android.os.Handler",
+    "android.os.WorkSource",
+    "android.app.AlarmManager$AlarmClockInfo"
+  ).implementation = function (
     type: number,
     triggerAtMillis: number,
     windowMillis: number,
