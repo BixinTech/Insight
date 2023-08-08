@@ -622,7 +622,7 @@ Java.perform(() => {
 
   TelephonyManager.getSimSerialNumber.overload("int").implementation =
     function (param: any) {
-      const signature = `[android.telephony.TelephonyManager getSimSerialNumber]`;
+      const signature = `[android.telephony.TelephonyManager getSimSerialNumber] param: ${param}`;
       send(signature);
       printStackTrace(getStackTrace());
       InsightApi.getInstance().flush(
@@ -648,7 +648,7 @@ Java.perform(() => {
   TelephonyManager.getDeviceId.overload("int").implementation = function (
     param: any
   ) {
-    const signature = `[android.telephony.TelephonyManager getDeviceId]`;
+    const signature = `[android.telephony.TelephonyManager getDeviceId] param: ${param}`;
     send(signature);
     printStackTrace(getStackTrace());
     InsightApi.getInstance().flush(
