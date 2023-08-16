@@ -128,6 +128,30 @@ Java.perform(() => {
     );
     return this.getRunningAppProcesses();
   };
+
+  ActivityManager.getAppTasks.implementation = function () {
+    const signature = `[android.app.ActivityManager getAppTasks]`;
+    send(signature);
+    printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
+    return this.getAppTasks();
+  };
+
+  ActivityManager.getRunningTasks.implementation = function (maxNum: number) {
+    const signature = `[android.app.ActivityManager getRunningTasks] maxNum: ${maxNum}`;
+    send(signature);
+    printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
+    return this.getRunningTasks();
+  };
   //#endregion
 
   //#region java.net.NetworkInterface
@@ -309,6 +333,40 @@ Java.perform(() => {
       formatStackTrace(getStackTrace())
     );
     return this.getStringForUser(contentResolver, name, userHandle);
+  };
+
+  Secure.getString.implementation = function (
+    contentResolver: any,
+    name: string
+  ) {
+    const signature = `[android.provider.Settings$Secure getString] contentResolver: ${contentResolver}, name: ${name}`;
+    send(signature);
+    printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
+    return this.getString(contentResolver, name);
+  };
+  //#endregion
+
+  //#region android.provider.Settings$System
+  const System = Java.use("android.provider.Settings$System");
+
+  System.getString.implementation = function (
+    contentResolver: any,
+    name: string
+  ) {
+    const signature = `[android.provider.Settings$System getString] contentResolver: ${contentResolver}, name: ${name}`;
+    send(signature);
+    printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
+    return this.getString(contentResolver, name);
   };
   //#endregion
 
@@ -504,6 +562,18 @@ Java.perform(() => {
     );
     return this.getSSID();
   };
+
+  WifiInfo.getIpAddress.implementation = function () {
+    const signature = `[android.net.wifi.WifiInfo getIpAddress]`;
+    send(signature);
+    printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
+    return this.getIpAddress();
+  };
   //#endregion
 
   //#region android.net.NetworkInfo
@@ -670,6 +740,123 @@ Java.perform(() => {
     );
     return this.getDeviceId();
   };
+
+  TelephonyManager.getImei.overload().implementation = function () {
+    const signature = `[android.telephony.TelephonyManager getImei]`;
+    send(signature);
+    printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
+    return this.getImei();
+  };
+
+  TelephonyManager.getImei.overload("int").implementation = function (
+    slotIndex: any
+  ) {
+    const signature = `[android.telephony.TelephonyManager getImei] slotIndex: ${slotIndex}`;
+    send(signature);
+    printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
+    return this.getImei(slotIndex);
+  };
+
+  TelephonyManager.getNai.overload().implementation = function () {
+    const signature = `[android.telephony.TelephonyManager getNai]`;
+    send(signature);
+    printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
+    return this.getNai();
+  };
+
+  TelephonyManager.getSubscriberId.overload().implementation = function () {
+    const signature = `[android.telephony.TelephonyManager getSubscriberId]`;
+    send(signature);
+    printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
+    return this.getSubscriberId();
+  };
+
+  TelephonyManager.getSubscriberIdGemini.implementation = function () {
+    const signature = `[android.telephony.TelephonyManager getSubscriberIdGemini]`;
+    send(signature);
+    printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
+    return this.getSubscriberIdGemini();
+  };
+  TelephonyManager.getNetworkOperator.implementation = function () {
+    const signature = `[android.telephony.TelephonyManager getNetworkOperator]`;
+    send(signature);
+    printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
+    return this.getNetworkOperator();
+  };
+  TelephonyManager.getNetworkType.implementation = function () {
+    const signature = `[android.telephony.TelephonyManager getNetworkType]`;
+    send(signature);
+    printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
+    return this.getNetworkType();
+  };
+  TelephonyManager.getSimOperator.implementation = function () {
+    const signature = `[android.telephony.TelephonyManager getSimOperator]`;
+    send(signature);
+    printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
+    return this.getSimOperator();
+  };
+  TelephonyManager.getSimOperatorName.implementation = function () {
+    const signature = `[android.telephony.TelephonyManager getSimOperatorName]`;
+    send(signature);
+    printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
+    return this.getSimOperatorName();
+  };
+  TelephonyManager.getLine1Number.implementation = function () {
+    const signature = `[android.telephony.TelephonyManager getLine1Number]`;
+    send(signature);
+    printStackTrace(getStackTrace());
+    InsightApi.getInstance().flush(
+      API_BASE_URL + "/flush",
+      signature,
+      formatStackTrace(getStackTrace())
+    );
+    return this.getLine1Number();
+  };
   //#endregion
 
   //#region android.os.Build
@@ -685,5 +872,34 @@ Java.perform(() => {
     );
     return this.getSerial();
   };
+  //#endregion
+
+  //#region android.content.pm.PackageManager
+  const PackageManager = Java.use("android.content.pm.PackageManager");
+  PackageManager.getInstalledPackages.overload("int").implementation =
+    function (flags: number) {
+      const signature = `[android.os.Build getInstalledPackages] flags: ${flags}`;
+      send(signature);
+      printStackTrace(getStackTrace());
+      InsightApi.getInstance().flush(
+        API_BASE_URL + "/flush",
+        signature,
+        formatStackTrace(getStackTrace())
+      );
+      return this.getInstalledPackages(flags);
+    };
+
+  PackageManager.getInstalledApplications.overload("int").implementation =
+    function (flags: number) {
+      const signature = `[android.os.Build getInstalledApplications] flags: ${flags}`;
+      send(signature);
+      printStackTrace(getStackTrace());
+      InsightApi.getInstance().flush(
+        API_BASE_URL + "/flush",
+        signature,
+        formatStackTrace(getStackTrace())
+      );
+      return this.getInstalledPackages(flags);
+    };
   //#endregion
 });
