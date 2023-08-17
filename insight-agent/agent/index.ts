@@ -675,14 +675,17 @@ Java.perform(() => {
     "int",
     "int"
   ).implementation = function (packageName: any, flags: any, userId: any) {
-    const signature = `[android.app.ApplicationPackageManager getPackageInfoAsUser] packageName: ${packageName}, flags: ${flags}, userId: ${userId}`;
-    send(signature);
-    printStackTrace(getStackTrace());
-    InsightApi.getInstance().flush(
-      API_BASE_URL + "/flush",
-      signature,
-      formatStackTrace(getStackTrace())
-    );
+    if (packageName !== "com.yitantech.gaigai") {
+      const signature = `[android.app.ApplicationPackageManager getPackageInfoAsUser] packageName: ${packageName}, flags: ${flags}, userId: ${userId}`;
+      send(signature);
+      printStackTrace(getStackTrace());
+      InsightApi.getInstance().flush(
+        API_BASE_URL + "/flush",
+        signature,
+        formatStackTrace(getStackTrace())
+      );
+    }
+
     return this.getPackageInfoAsUser(packageName, flags, userId);
   };
   //#endregion
